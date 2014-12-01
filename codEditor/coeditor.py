@@ -7,7 +7,7 @@ import sys
 import copy
 import argparse
 import subprocess
-import uuid
+import time
 import shlex
 
 class Editor(object):
@@ -24,6 +24,8 @@ class Editor(object):
 
     def __init__(self):
         self.baklist = []
+        self.basepath = os.path.dirname(os.path.abspath(sys.argv[0])) + os.sep
+        self.bakdir = self.basepath + '.coebakup'
     
     def run(self):
         parser = argparse.ArgumentParser(description="code editor")
@@ -50,29 +52,35 @@ class Editor(object):
         elif args.bakfile is not None:
             print(args.bakfile)
 
+    def excute(self, cmd):
+        p = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        out, err = p.communicate()
+        if err != '':
+            print('Error! >> %s\n' % (err.strip())),
+            return -1        
+        return 0
+
     def fbak(self, flist):
         '''
-        文件备份，使用uuid生成随机后缀
+        文件备份
         '''
         rdict = {}
+        if not os.path.exists(self.bakdir):
+            os.mkdir(self.bakdir)
         if type(flist) == type('string'):
             f = flist
-            bakfile = f + '.tempbak' + str(uuid.uuid1())
-            cmd = 'mv -f ' + f + ' ' + bakfile
-            p = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-            out, err = p.communicate()
-            if err != '':
-                print('Error in backup files >> %s\n' % (err.strip())),
+            postfix = str(time.time()).replace('.', '-')
+            bakfile = f + '.coebak_' + postfix
+            cmd = 'mv -f ' + f + ' ' + self.bakdir + os.sep + ' ' + bakfile
+            if self.excute(cmd) == -1:
                 return -1
             rdict[f] = bakfile
             return rdict
         for f in flist:
-            bakfile = f + '.tempbak' + str(uuid.uuid1())
-            cmd = 'mv -f ' + f + ' ' + bakfile
-            p = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-            out, err = p.communicate()
-            if err != '':
-                print('Error in backup files >> %s\nnow roll back!' % (err.strip())),
+            postfix = str(time.time()).replace('.', '-')
+            bakfile = f + '.coebak_' + postfix
+            cmd = 'mv -f ' + f + ' ' +  self.bakdir + os.sep + bakfile
+            if self.excute(cmd) == -1:
                 self.frecover(rdict)
                 return rdict
             rdict[f] = bakfile
@@ -82,11 +90,9 @@ class Editor(object):
         if len(fdict.keys()) == 0:
             return 0
         for refile, f in fdict.items():
-            cmd = 'mv -f ' + f + ' ' + refile
-            p = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-            out, err = p.communicate()
-            if err != '':
-                print('Error in recover files : %s' % (err)),
+            cmd = 'mv -f ' + self.bakdir + os.sep + f + ' ..' + os.sep + refile
+            if self.excute(cmd) == -1:
+                return -1
         return 0    
 
     def heal_the_world(self):
@@ -180,7 +186,7 @@ class Editor(object):
         tfdict = self.fbak(targetfiles)
         for file, bakfile in tfdict.items():
             try:
-                input = open(bakfile, 'r')
+                input = open(self.bakdir + os.sep + bakfile, 'r')
                 output = open(file, 'w')
                 flag = 0
                 s = input.readline()
@@ -241,7 +247,7 @@ class Editor(object):
         '''
         tfdict = self.fbak(filedict.keys())
         for file, bakfile in tfdict.items():
-            input = open(bakfile, 'r')
+            input = open(self.bakdir + os.sep + bakfile, 'r')
             output = open(file, 'w')
             flag = filedict[file]
             lnumber = 1
@@ -268,7 +274,7 @@ class Editor(object):
             type = string
         '''    
         tfdict = self.fbak(file)
-        input = open(tfdict[file], 'r')
+        input = open(self.bakdir + os.sep + tfdict[file], 'r')
         output = open(file, 'w')
         lnumber = 1
         s = input.readline()
@@ -281,7 +287,7 @@ class Editor(object):
 
     def linerpl(self, file, line, str):
         tfdict = self.fbak(file)
-        input = open(tfdict[file], 'r')
+        input = open(self.bakdir + os.sep + tfdict[file], 'r')
         output = open(file, 'w')
         lnumber = 1
         s = input.readline()
@@ -304,7 +310,7 @@ if __name__ == '__main__':
     '''
     e = Editor()
     #e.c_if_rpl('test.c', 'main', 3, [{'if(flag)' : 'if(1)'}])
-    e.c_func_rpl('hi', 'hello', 'testlib.c', 'testlib.h', ['test.c'])
+    e.c_func_rpl('hi', 'hello', 'testlib.c', 'testlib.h', ['testl.c'])
     #e.linedel({'testl.c':9})
     #e.lineins('testl.c', 9, 8, 'abcdefg')
     #e.linerpl('testl.c', 9, 'abcdefg')
