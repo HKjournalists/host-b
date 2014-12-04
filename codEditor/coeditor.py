@@ -52,11 +52,13 @@ class Editor(object):
             self.frecover(args.rfile.strip())
 
     def excute(self, cmd):
+        #print('excute cmd: %s' % (cmd))
         p = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         out, err = p.communicate()
         if err != '':
             print('Error! >> %s\n' % (err.strip())),
             return -1        
+        #print out
         return 0    
 
     def isbak(self, file):
@@ -346,5 +348,5 @@ if __name__ == '__main__':
     #e.linedel({'testl.c':9})
     #e.lineins('testl.c', 9, 8, 'abcdefg')
     #e.linerpl('testl.c', 9, 'abcdefg')
-    e.run()
+    #e.run()
     #e.isbak('testl.c')
