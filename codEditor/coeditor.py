@@ -32,7 +32,7 @@ class Editor(object):
         parser.add_argument('-b', dest = 'bakfile', help = 'bakup file', default = None)
         parser.add_argument('-c', help = 'edit c language file', action = 'store_true')
         parser.add_argument('-f', help = 'edit function', action = 'store_true')
-        parser.add_argument('-r', help = 'restore files', action = 'store_true')
+        parser.add_argument('-r', '--recover' , dest = 'rfile' ,help = 'recovedr files', default = None)
         parser.add_argument('-o', '--oldf', dest = 'oldfunc', help = 'the name of the function to be replaced', default = None)
         parser.add_argument('-n', '--newf', dest = 'newfunc', help = 'the name of the new function', default = None)
         parser.add_argument('-s', dest = 'cfile', help = 'the new function \'s source file(.c)', default = None)
@@ -46,11 +46,10 @@ class Editor(object):
                     targetfiles.append(args.tfile)
                     self.c_func_rpl(args.oldfunc, args.newfunc, args.cfile, args.hfile, targetfiles)            
             exit()
-        elif args.r:
-            self.heal_the_world()
-            exit()    
         elif args.bakfile is not None:
-            print(args.bakfile)
+            self.fbak(args.bakfile.strip())
+        elif args.rfile is not None:
+            self.frecover(args.rfile.strip())
 
     def excute(self, cmd):
         p = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
@@ -58,7 +57,15 @@ class Editor(object):
         if err != '':
             print('Error! >> %s\n' % (err.strip())),
             return -1        
-        return 0
+        return 0    
+
+    def isbak(self, file):
+        for i in os.listdir(self.bakdir):
+            if os.path.isfile(self.bakdir + os.sep + i):
+                #print i.split('_')[0].strip().replace('.coebak', '')
+                if file.strip() == i.split('coebak')[0].strip():
+                    return True
+        return False
 
     def fbak(self, flist):
         '''
@@ -69,24 +76,43 @@ class Editor(object):
             os.mkdir(self.bakdir)
         if type(flist) == type('string'):
             f = flist
+            if self.isbak(f):
+                print('file %s has already been bakuped!' % (f))
+                return rdict
             postfix = str(time.time()).replace('.', '-')
             bakfile = f + '.coebak_' + postfix
-            cmd = 'mv -f ' + f + ' ' + self.bakdir + os.sep + ' ' + bakfile
+            cmd = 'cp ' + f + ' ' + self.bakdir + os.sep + bakfile
+            #print cmd
             if self.excute(cmd) == -1:
                 return -1
             rdict[f] = bakfile
             return rdict
         for f in flist:
+            if isbak(f):
+                print('file %s has already been bakuped!' % (f))
+                continue
             postfix = str(time.time()).replace('.', '-')
             bakfile = f + '.coebak_' + postfix
-            cmd = 'mv -f ' + f + ' ' +  self.bakdir + os.sep + bakfile
+            cmd = 'cp ' + f + ' ' + self.bakdir + os.sep + bakfile
             if self.excute(cmd) == -1:
-                self.frecover(rdict)
+                self.recoverall(rdict)
                 return rdict
             rdict[f] = bakfile
         return rdict
     
-    def frecover(self, fdict):
+    def frecover(self, file):
+        for i in os.listdir(self.bakdir):
+            if os.path.isfile(self.bakdir + os.sep + i):
+                f = i.split('coebak')[0].strip().split('.')
+                f = f[0] + '.' + f[1]
+                #print f
+                if file == f:
+                    cmd = 'mv -f ' + self.bakdir + os.sep + i + ' ' + self.basepath + f
+                    #print cmd
+                    if self.excute(cmd) == -1:
+                        return -1
+
+    def recoverall(self, fdict):
         if len(fdict.keys()) == 0:
             return 0
         for refile, f in fdict.items():
@@ -230,7 +256,7 @@ class Editor(object):
                     s = input.readline()
             except (IOError, AttributeError), e:
                 print str(e)
-                self.frecover(tfdict)
+                self.recoverall(tfdict)
                 return -1
             finally:
                 if input is not None:
@@ -261,7 +287,7 @@ class Editor(object):
                 s = input.readline()
                 lnumber += 1
     
-    def lineins(self, file, line, span, str):
+    def lineins(self, file, line, span, str, nextline=None):
         '''
         单行插入
         file:文件名
@@ -280,7 +306,13 @@ class Editor(object):
         s = input.readline()
         while s:
             if lnumber == line:
-                output.write(' '* span + str + os.linesep)
+                nl = input.readline()
+                if nextline is not None:
+                    if re.match(nextline.strip(), nl.strip()) is not None:
+                        output.write(' '* span + str + os.linesep)
+                    else:
+                        pirnt('the next line is not match')
+                        s = nl
             output.write(s)
             s = input.readline()
             lnumber += 1
@@ -310,9 +342,9 @@ if __name__ == '__main__':
     '''
     e = Editor()
     #e.c_if_rpl('test.c', 'main', 3, [{'if(flag)' : 'if(1)'}])
-    e.c_func_rpl('hi', 'hello', 'testlib.c', 'testlib.h', ['testl.c'])
+    #e.c_func_rpl('hi', 'hello', 'testlib.c', 'testlib.h', ['testl.c'])
     #e.linedel({'testl.c':9})
     #e.lineins('testl.c', 9, 8, 'abcdefg')
     #e.linerpl('testl.c', 9, 'abcdefg')
-    #e.run()
-
+    e.run()
+    #e.isbak('testl.c')
