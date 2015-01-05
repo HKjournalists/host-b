@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include "testlib.h"
 
 int hi();
 
@@ -18,8 +19,8 @@ int main()
     printf("Hello world!%d,%d,%d,%dashi() sd hi() =hi() +hi();\n", hi(), 1 + hi(), hi(), hi());
     printf("hi()");
     printf("hi();");
-    //strcat(hi(), "hi()");
-    //strcat(hi(), "hi();");
+    //strcat(hello(), "hi()");
+    //strcat(hello(), "hi();");
     hi();
     int i = hi();
     int j=hi();

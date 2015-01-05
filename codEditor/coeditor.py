@@ -49,25 +49,25 @@ class Editor(object):
         elif args.bakfile is not None:
             self.fbak(args.bakfile.strip())
         elif args.rfile is not None:
+            #print type(args.rfile)
             self.frecover(args.rfile.strip())
 
     def excute(self, cmd):
-        #print('excute cmd: %s' % (cmd))
         p = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         out, err = p.communicate()
         if err != '':
             print('Error! >> %s\n' % (err.strip())),
             return -1        
-        #print out
         return 0    
 
     def isbak(self, file):
         for i in os.listdir(self.bakdir):
             if os.path.isfile(self.bakdir + os.sep + i):
-                #print i.split('_')[0].strip().replace('.coebak', '')
-                if file.strip() == i.split('coebak')[0].strip():
-                    return True
-        return False
+                f = i.split('_')[0].strip().replace('.coebak', '')
+                if file.strip() == f:
+                    #print i
+                    return i
+        return None
 
     def fbak(self, flist):
         '''
@@ -78,8 +78,10 @@ class Editor(object):
             os.mkdir(self.bakdir)
         if type(flist) == type('string'):
             f = flist
-            if self.isbak(f):
-                print('file %s has already been bakuped!' % (f))
+            bakflag = self.isbak(f)
+            if bakflag is not None:
+                print('file %s exist!' % (f))
+                rdict[f] = bakflag
                 return rdict
             postfix = str(time.time()).replace('.', '-')
             bakfile = f + '.coebak_' + postfix
@@ -90,8 +92,10 @@ class Editor(object):
             rdict[f] = bakfile
             return rdict
         for f in flist:
-            if isbak(f):
-                print('file %s has already been bakuped!' % (f))
+            bakflag = self.isbak(f)
+            if bakflag is not None:
+                print('file %s exist!' % (f))
+                rdict[f] = bakflag
                 continue
             postfix = str(time.time()).replace('.', '-')
             bakfile = f + '.coebak_' + postfix
@@ -156,12 +160,14 @@ class Editor(object):
             type = [{string:string}, ...]
         '''
         tlist = copy.deepcopy(list)
-        output = file + '.temp.codEditor'
+        input = None
+        output = None
         tfdict = self.fbak(file)
         try:
-            input = open(tfdict[file], 'r')
+            #print tfdict
+            input = open(self.bakdir + os.sep + tfdict[file], 'r')
             output = open(file, 'w')
-            f.seek(0)
+            output.seek(0)
             flag = 0
             s = input.readline()   
             while s:
@@ -198,13 +204,13 @@ class Editor(object):
             type = string
         newfunc:替换后函数名
             type = string  
-        cfile:替换函数所在.c文件（暂时无意义，用于编译）
+        cfile:替换函数所在.c文件（用于编译）
             type = string
         hfile:声明替换函数的.h文件
             type = string
         targefiles:需进行替换的文件列表
             type = [string, ...]  
-        scope:替换范围，0表示局部替换，1表示全局替换（暂时没用到）
+        scope:替换范围，0表示局部替换，1表示全局替换（目前仅使用全局替换）
             type = int 
         startline:开始替换数
             type = int 
@@ -300,6 +306,8 @@ class Editor(object):
             type = int
         str:插入内容    
             type = string
+        nextline:原插入行内容
+            type = string
         '''    
         tfdict = self.fbak(file)
         input = open(self.bakdir + os.sep + tfdict[file], 'r')
@@ -308,18 +316,24 @@ class Editor(object):
         s = input.readline()
         while s:
             if lnumber == line:
-                nl = input.readline()
                 if nextline is not None:
-                    if re.match(nextline.strip(), nl.strip()) is not None:
+                    if re.match(nextline.strip(), s.strip()) is not None:
                         output.write(' '* span + str + os.linesep)
                     else:
-                        pirnt('the next line is not match')
-                        s = nl
+                        pirnt('the line is not match')
+                else:
+                    output.write(' '* span + str + os.linesep)    
             output.write(s)
             s = input.readline()
             lnumber += 1
 
     def linerpl(self, file, line, str):
+        '''
+        单行替换
+        file:文件名;type = string
+        line:替换行号;type = int
+        str:原替换行内容;type = string
+        '''
         tfdict = self.fbak(file)
         input = open(self.bakdir + os.sep + tfdict[file], 'r')
         output = open(file, 'w')
@@ -349,4 +363,16 @@ if __name__ == '__main__':
     #e.lineins('testl.c', 9, 8, 'abcdefg')
     #e.linerpl('testl.c', 9, 'abcdefg')
     #e.run()
+    #e.fbak('testl.c')
     #e.isbak('testl.c')
+    #e.frecover('testl.c')
+
+
+
+
+
+
+
+
+
+
