@@ -1,0 +1,13 @@
+# This file is edited by fstab-sync - see 'man fstab-sync' for details
+none                    /dev/pts                devpts  gid=5,mode=620  0 0
+#none                    /dev/shm                tmpfs   defaults        0 0
+none                    /proc                   proc    defaults        0 0
+none                    /sys                    sysfs   defaults        0 0
+/dev/hda                /media/cdrom            auto    pamconsole,exec,noauto,managed 0 0
+#/dev/sda1    swap     swap    defaults      0 0
+/dev/sda2     /   ext2    defaults    0   1
+/dev/sda3     /var   ext2    defaults    0   1
+/dev/sda4     /noah   ext2    defaults    0   1
+/dev/sda5     /tmp   ext2    defaults    0   1
+/dev/sda6     /home       ext4    defaults        0       0
+/dev/sdb1     /home/ssd1       ext4    defaults        0       0
