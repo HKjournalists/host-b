@@ -1,6 +1,17 @@
 # -*- coding: utf8 -*-
 #!/usr/bin/env python
-__author__ = 'wangbin19'
+
+################################################################################
+#
+# Copyright (c) 2015 Baidu.com, Inc. All Rights Reserved
+#
+################################################################################
+"""
+交换机telnet库
+
+Authors: wangbin19@baidu.com
+Date:    2015/06/25 14:26:06
+"""
 
 import re
 import os
@@ -18,8 +29,7 @@ class TelnetXorplus(object):
 
     def connect(self, timeout=30):
         '''连接交换机（xorplus系统）
-        Args:f
-            
+        Args:
         Returns:
             0: 正常连接
             -1: 登陆过程中出错
@@ -79,7 +89,6 @@ class TelnetXorplus(object):
     def getConn(self, timeout=30):
         '''获取连接，若链接不存在或已失效则重新连接
         Args:
-            
         Returns:
             0: 获取到连接
             -1: 登陆过程中出错
@@ -146,7 +155,9 @@ class TelnetXorplus(object):
             return -4
 
     def send_seq_commit(self, cmds, set_explists, commit_explists, timeout=10):
-        '''连接交换机，执行一系列命令并commit，此方法存在安全隐患，一旦某一部失败无法回退
+        '''连接交换机，执行一系列命令并commit，此方法存在安全隐患，一旦某一条指令失败无法回退
+           TODO完成前不推荐使用！
+           # TODO: 改进安全隐患$wangbin19$2015-07-30$
         Args:
             cmds: 要执行的命令列表。
             set_explists: set命令的预期执行结果列表，每一个元素都是一个列表，对应cmds中元素。
@@ -360,12 +371,29 @@ class TelnetXorplus(object):
             return -4
 
     def update_system(self, tftphost, file):
+        '''连接交换机，进行系统升级
+        Args:
+            tftphost: tftp服务器ip
+            file: 升级文件名
+        Returns:
+            0: 正常执行
+            -1: 登陆过程中出错
+            -2: 交换机要求输入用户名、密码但用户名/密码为空
+            -3: socket error 无法建立telnet连接
+            -4: 连接异常终止
+            -5: 传入的set_explist，commit_explist参数不是列表类型，或cmd包含'\n'
+            -6: set命令出错，一般由于命令格式有问题
+        '''
         cmd ='run file tftp get remote-file %s local-file rootfs.tar.gz ip-address %s'\
              % (file, tftphost) 
         #print cmd
         print self.send_nocommit(tftp, ['Done!'], 300)
+        cmd = 'run request system reboot'
+        self.send_nocommit(cmd, ['*'])
 
     def test(self):
+        '''test function
+        '''
         ret = self.getConn()
         if ret != 0:
             return ret
@@ -379,7 +407,7 @@ class TelnetXorplus(object):
         return s
 
     def test2(self):
-        '''test function
+        '''test function2
         '''
         t=telnetlib.Telnet('192.168.30.40')
         print t
@@ -421,11 +449,11 @@ Tagged port: None\r\r\n\
 Untagged port: None'
     print t.send_nocommit('run show vlans vlan-id 111', [str])
     '''  
-    #tftp = 'tftp -g -l rootfs.tar.gz -r %s 192.168.30.92' % (file)
+    ####tftp = 'tftp -g -l rootfs.tar.gz -r %s 192.168.30.92' % (file)
     ####print t.shell_cmd(['cd /cftmp', tftp])
     #t.update_system('192.168.30.92', 'rootfs-d2020_1-0-8-5.tar.gz')
     
-    print t.test()
+    #print t.test()
     #print s.getvalue()
     #s.seek(0)
     #for line in s.readlines():

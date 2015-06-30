@@ -68,9 +68,13 @@ class DevManager(object):
         Returns:
             common.SUCCESS: 通过检测
             common.IP_FORMAT_ERROR: IP格式错误
+            common.IP_NULL: 
             common.IP_UNAME_NULL: 用户名为空
             common.IP_PSWD_NULL: 密码为空
         '''
+        if ip is None or ip == '':
+            print json.dumps({'err': 'ip is null!'})
+            return common.IP_NULL
         regex = r'^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$'
         pattern = re.compile(regex)
         m = pattern.match(ip)
@@ -79,10 +83,10 @@ class DevManager(object):
             return common.IP_FORMAT_ERROR
         if uname is None or uname == '':
             print json.dumps({'err': 'need user name!'})
-            return common.IP_UNAME_NULL 
+            return common.UNAME_NULL 
         if passwd is None or passwd == '':
             print json.dumps({'err': 'need pass word!'})
-            return common.IP_PSWD_NULL
+            return common.PSWD_NULL
         return common.SUCCESS
 
     def vmembers_review(self, members):
@@ -266,7 +270,7 @@ class DevManager(object):
                 if ret[0] != 0:
                     print json.dumps({'err': ret[1]})
                     return common.ERROR
-            print json.dumps({'msg': 'set switch info success'})
+            print json.dumps({'msg': 'set info success'})
             return common.SUCCESS
 
     def set_switch_l2(self, port, pvid): 
@@ -574,6 +578,12 @@ class DevManager(object):
             routes.append(route)
             i += 1
         print json.dumps(routes)   #将json对象转化为json字符串，打印给node.js后台
+
+
+    def get_connectivity(self):
+        '''联通性判断
+        '''
+        pass
 
     def undo(self, his=None):
         '''还原服务器操作

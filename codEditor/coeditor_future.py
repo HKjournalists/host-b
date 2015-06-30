@@ -13,12 +13,12 @@ import shlex
 class Editor(object):
     '''
     代码修改工具:
-        update:20140105
+        update:20141031
         C语言if语句替换
         C语言函数替换
         单行删除
         单行插入
-        单行替换
+        
         
     '''
 
@@ -357,14 +357,15 @@ if __name__ == '__main__':
     调用run()可使用命令行模式 
     '''
     e = Editor()
-    #e.fbak('testl.c')
-    #e.frecover('testl.c')
-    #e.c_if_rpl('testl.c', 'main', 3, [{'if(flag)' : 'if(1)'}])
+    #e.c_if_rpl('test.c', 'main', 3, [{'if(flag)' : 'if(1)'}])
     #e.c_func_rpl('hi', 'hello', 'testlib.c', 'testlib.h', ['testl.c'])
     #e.linedel({'testl.c':9})
     #e.lineins('testl.c', 9, 8, 'abcdefg')
     #e.linerpl('testl.c', 9, 'abcdefg')
-    e.run()
+    #e.run()
+    #e.fbak('testl.c')
+    #e.isbak('testl.c')
+    #e.frecover('testl.c')
 
 
 

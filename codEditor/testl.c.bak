@@ -10,7 +10,7 @@ int hi();
 int main()
 {
     int flag = 0;
-    if(1)
+    if(flag)
     {
         printf("Hello world!%d,  hi();\n", hi());
     }
