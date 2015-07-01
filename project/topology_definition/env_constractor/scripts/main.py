@@ -582,6 +582,7 @@ class DevManager(object):
 
     def get_connectivity(self):
         '''联通性判断
+        
         '''
         pass
 
