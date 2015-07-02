@@ -4655,7 +4655,7 @@ function submitJson(){
 }
 
 /**获取设备信息
- * 
+ * aaaaas
  *
  */
 function getDevInfo(ip, username, password, devType, queryType, figureId){
@@ -4697,7 +4697,7 @@ function getDevInfo(ip, username, password, devType, queryType, figureId){
  * 获取设备联通性
  * @param {Object} data 需要判断联通性的两台设备的信息json串，格式如下：
           {
-          src: {'ip': '1.1.1.1', 'username': 'root', 'password': '123456', 'dev': 'sw/sv'}
+          src: {'ip': '1.1.1.1', 'username': 'root', 'password': '123456', 'dev': 'sw/sv'},
           dst: {'ip': '1.1.1.1', 'username': 'root', 'password': '123456', 'dev': 'sw/sv'}
           }
  */
@@ -4709,12 +4709,13 @@ function getConnectivity(data){
     request.onreadystatechange = function(){
         if(request.readyState === 4 && request.status === 200){
             try{
-                //由后台接收到JSON字符串转，换为JSON对象，后台返回的JSON串格式为：
-                //{
-                //     'cType': 'connected/remote',
-                //     'interface': 'eth0>eth1',
-                //     'subnet': '192.168.1.5/24>191.168.3.6/24'
-                //}
+                /*由后台接收到JSON字符串转，换为JSON对象，后台返回的JSON串格式为：
+                {
+                    'cFlag': 'connected/remote',
+                    'cType': 'full/forward/reverse',
+                    'cInterface': 'eth0>eth1',
+                    'cSubnet': '192.168.1.5/24>191.168.3.6/24'
+                } */
                 var ret = JSON.parse(request.responseText);
 
             }catch(e){
