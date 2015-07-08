@@ -4655,7 +4655,7 @@ function submitJson(){
 }
 
 /**获取设备信息
- * aaaaas
+ * 
  *
  */
 function getDevInfo(ip, username, password, devType, queryType, figureId){

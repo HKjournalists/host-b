@@ -387,7 +387,7 @@ class TelnetXorplus(object):
         cmd ='run file tftp get remote-file %s local-file rootfs.tar.gz ip-address %s'\
              % (file, tftphost) 
         #print cmd
-        print self.send_nocommit(tftp, ['Done!'], 300)
+        print self.send_nocommit(cmd, ['Done!'], 300)
         cmd = 'run request system reboot'
         self.send_nocommit(cmd, ['*'])
 
@@ -451,7 +451,7 @@ Untagged port: None'
     '''  
     ####tftp = 'tftp -g -l rootfs.tar.gz -r %s 192.168.30.92' % (file)
     ####print t.shell_cmd(['cd /cftmp', tftp])
-    #t.update_system('192.168.30.92', 'rootfs-d2020_1-0-8-5.tar.gz')
+    t.update_system('192.168.30.92', 'rootfs-ly2r_1-0-7-2.tar.gz')
     
     #print t.test()
     #print s.getvalue()
