@@ -161,11 +161,13 @@ ConnectorManager.prototype = {
      * @return {Number} the id of the newly created Connector
      */
     connectorCreate:function(startPoint,endPoint,type){
+        //wb mod arguments[3]、arguments[4]分别表示连接线连接的源、目的设备
         //get a new id for Connector
         var id = STACK.generateId();
 
         //create and save connector
-        this.connectors.push(new Connector(startPoint,endPoint,type, id));
+        this.connectors.push(new Connector(startPoint, endPoint, type, id, 
+                                           arguments[3], arguments[4]));
 
         //create ConnectionPoints for Connector
         this.connectionPointCreate(id, startPoint, ConnectionPoint.TYPE_CONNECTOR);
@@ -646,6 +648,7 @@ ConnectorManager.prototype = {
             curDistance;
 
         // find closest to endPoint
+        //选择起点图形上距离终点最近的连接点终点
         for(var i = 1; i < fCpLength; i++){
             curPoint = fCps[i].point;
             curDistance = Util.distance(curPoint, endPoint);

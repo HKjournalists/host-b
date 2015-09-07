@@ -9,10 +9,14 @@ import json
 import re
 import telnetlib
 import argparse
+# 新增
+import struct
+import socket
 
 import logger
+import netprobe
 import ssh_tools
-import telnet_tools
+import telnet_tools 
 import common
 import history
 
@@ -581,10 +585,232 @@ class DevManager(object):
 
 
     def get_connectivity(self):
-        '''联通性判断
-        
         '''
-        pass
+        连通性判断
+        Args:
+            无
+        Returns:
+            -1: ssh连接出错   
+        self.data = {
+            'src': {'ip': '10.32.19.211', 'username': 'root', 'password': 'nsi7654321', 'dev': 'sv'},
+            'dst': {'ip': '10.32.19.64', 'username': 'root', 'password': 'nsi1234567', 'dev': 'sv'}
+        }
+        '''
+        json_result = {
+            'isConnect' : '0',
+            'connInfo' : []
+        }
+        src_ip = self.data['src']['ip']
+        src_username = self.data['src']['username']
+        src_password = self.data['src']['password']
+        src_dev = self.data['src']['dev']
+        dst_ip = self.data['dst']['ip']
+        dst_username = self.data['dst']['username']
+        dst_password = self.data['dst']['password']
+        dst_dev = self.data['dst']['dev']
+
+        if (src_dev == 'sv') and (dst_dev == 'sv'):
+            # 只提取ping结果的第二行，然后判断是否连通
+            # 连通判断依据为返回结果中匹配到time，
+            # 如果不通，返回结果匹配到 Destination Host Unreachable
+            src_ssh = ssh_tools.SshConnect(src_ip, src_username, src_password)
+            dst_ssh = ssh_tools.SshConnect(dst_ip, dst_username, dst_password)
+            conn_lines = src_ssh.get_cmd_ret("ping -c 1 10.32.19.64 | sed -n '2,2p'")
+            if type(conn_lines) == int:  #ssh连接异常
+                #print json.dumps({'err': 'ssh connect error'})
+                return -1
+            mask = ''
+            if conn_lines[0].find('time') > 0:
+                json_result['isConnect'] = 1
+                cinfo = {
+                    'cFlag': 'connected', 
+                    'cType': 'full', 
+                    'srcInterface': '', 
+                    'dstInterface': '',
+                    'srcNet': '', 
+                    'dstNet': '', 
+                    'extra': ''
+                }
+                # 获取源ip服务器所有接口名
+                ifaces = src_ssh.get_cmd_ret("netstat -ni | cut -d ' '  -f 1 | sed -n '3,$p'")
+                if type(ifaces) == int:  #ssh连接异常
+                    #print json.dumps({'err': 'ssh connect error'})
+                    return -1
+                for iface in ifaces:
+                    iface = iface.replace('\n', '')
+                    #print iface
+                    if_result = src_ssh.get_cmd_ret("ifconfig {0} | sed -n '2,2p'".format(iface))
+                    if if_result[0].find(src_ip) > 0:
+                        mask = if_result[0].split('Mask:')[1]
+                        #print common.MASK_LEN[mask]
+                        cinfo['srcInterface'] = iface
+                        break
+                # 获取目的ip服务器所有接口名
+                ifaces = dst_ssh.get_cmd_ret("netstat -ni | cut -d ' '  -f 1 | sed -n '3,$p'")
+                if type(ifaces) == int:  #ssh连接异常
+                    #print json.dumps({'err': 'ssh connect error'})
+                    return -1
+                for iface in ifaces:
+                    # 由于获取的接口名中包含\n字符，因此这里需要替换掉
+                    iface = iface.replace('\n', '')
+                    if_result = dst_ssh.get_cmd_ret("ifconfig {0}".format(iface))
+                    if if_result[1].find(dst_ip) > 0:
+                        cinfo['dstInterface'] = iface
+                        break
+                # 获取网络号
+                ip = socket.ntohl(struct.unpack("I", socket.inet_aton(str(src_ip)))[0])
+                int_mask = socket.ntohl(struct.unpack("I", socket.inet_aton(str(mask)))[0])
+                network = socket.inet_ntoa(struct.pack('I', socket.htonl(ip & int_mask)))
+                cinfo['srcNet'] = network + '/' + common.MASK_LEN[mask]
+                cinfo['dstNet'] = network + '/' + common.MASK_LEN[mask]
+                json_result['connInfo'].append(cinfo)
+            elif conn_lines[0].find('Destination Host Unreachable') > 0:
+                json_result['isConnect'] = 0
+
+        elif (src_dev == 'sv') and (dst_dev == 'sw'):
+            ''' 待处理
+            '''
+
+        elif (src_dev == 'sw') and (dst_dev == 'sv'):
+            ''' 待处理
+            '''
+
+        elif (src_dev == 'sw') and (dst_dev == 'sw'):
+            ''' 待处理
+            '''
+        print json.dumps(json_result)
+
+    def get_nbrs(self):
+        '''
+        获取邻居信息
+        Args:
+            无
+        Returns:
+            ret: 每个网卡的直连邻居信息，格式为：
+                 [{'dev': '接口1', nbrs: [{'ip': '邻居ip', 'mac': '邻居mac'}, ...]}, ...]
+            -1: 获取失败  
+        '''
+        ip = self.data['ip']
+        username = self.data['username']
+        password = self.data['password']
+        np = netprobe.NetProbe(ip, username, password)
+        ret = np.scanbrs()
+        if type(ret) == tuple:
+            print json.dumps({'err': 'get neighbors failed: ' + ret[1]})
+            return -1
+        print json.dumps(ret)
+
+    def get_connectivity2(self):
+        self.data = {
+            'src': {'ip': '10.32.19.93', 'username': 'root', 'password': 'nsiqa', 'dev': 'sv'},
+            'dst': {'ip': '10.32.19.99', 'username': 'root', 'password': 'nsi7654321', 'dev': 'sv'}
+        }
+        json_result = {
+            'isConnect' : 0,
+            'connInfo' : []
+        }
+        src_ip = self.data['src']['ip']
+        src_username = self.data['src']['username']
+        src_password = self.data['src']['password']
+        #src_dev = self.data['src']['dev']
+        dst_ip = self.data['dst']['ip']
+        dst_username = self.data['dst']['username']
+        dst_password = self.data['dst']['password']
+        #dst_dev = self.data['dst']['dev']  
+        nps = netprobe.NetProbe(src_ip, src_username, src_password)
+        npd = netprobe.NetProbe(dst_ip, dst_username, dst_password)
+        flag = 0
+        mngip = '10.32.0.0/16'
+        src_devs = nps.getnets()
+        dst_devs = npd.getnets()
+        print(src_devs)
+        print(dst_devs)
+        for sdev in src_devs:    #TODO 循环待改进
+            if sdev == 'lo':
+                continue
+            #print('sdev: ' + sdev)
+            for ddev in dst_devs:
+                if ddev == 'lo':
+                    continue
+                #print('ddev: ' + ddev)
+                for sip in src_devs[sdev]:
+                    #print('sip: ' + sip)
+                    ret = netprobe.NetProbe.samenet(sip, mngip)
+                    if ret == -1 or ret:
+                        continue
+                    for dip in dst_devs[ddev]:
+                        #print('dip: ' + dip)
+                        ret = netprobe.NetProbe.samenet(dip, mngip)
+                        if ret == -1 or ret:
+                            continue
+                        if netprobe.NetProbe.samenet(sip, dip):
+                            if nps.isnbr(sip.split('/')[0], sdev, dip.split('/')[0]) == 1:
+                                if flag == 0:
+                                    flag = 1
+                                if json_result['isConnect'] == 0:
+                                    json_result['isConnect'] = 1
+                                cinfo = {
+                                    'cFlag': 'connected', 'cType': 'full', 
+                                    'srcInterface': sdev, 'dstInterface': ddev,
+                                    'srcNet': sip, 'dstNet': dip, 'extra': ''
+                                }
+                                json_result['connInfo'].append(cinfo)
+        if flag == 1:
+            print json.dumps(json_result)
+            return 0   
+        #print('########################')
+        for sdev in src_devs:            #TODO 同上
+            if sdev == 'lo':
+                continue
+            #print('sdev: ' + sdev)
+            for ddev in dst_devs:
+                if ddev == 'lo':
+                    continue
+                #print('ddev: ' + ddev)
+                for sip in src_devs[sdev]:
+                    #print('sip: ' + sip)
+                    ret = netprobe.NetProbe.samenet(sip, mngip)
+                    #print(ret)
+                    if ret == -1 or ret:
+                        continue
+                    for dip in dst_devs[ddev]:
+                        #print('dip: ' + dip)
+                        ret = netprobe.NetProbe.samenet(dip, mngip)
+                        #print(ret)
+                        if ret == -1 or ret:
+                            continue
+                        src_ssh = ssh_tools.SshConnect(src_ip, src_username, src_password)
+                        dst_ssh = ssh_tools.SshConnect(dst_ip, dst_username, dst_password)
+                        sip = netprobe.NetProbe.iplus(dip)
+                        src_ssh.send_cmd('ip l set dev %s down' % (sdev))
+                        src_ssh.send_cmd('ip l set dev %s arp off' % (sdev))
+                        src_ssh.send_cmd('ip l set dev %s up' % (sdev))
+                        src_ssh.send_cmd('ip l set dev %s arp on' % (sdev))
+                        src_ssh.send_cmd('ip a add %s dev %s' % (sip, sdev))
+                        dst_ssh.send_cmd('ip l set dev %s down' % (ddev))
+                        dst_ssh.send_cmd('ip l set dev %s arp off' % (ddev))
+                        dst_ssh.send_cmd('ip l set dev %s up' % (ddev))
+                        dst_ssh.send_cmd('ip l set dev %s arp on' % (ddev))
+                        if nps.isnbr(sip.split('/')[0], sdev, dip.split('/')[0]) == 1:
+                            cinfo = {
+                                'cFlag': 'unconnected', 'cType': 'break', 
+                                'srcInterface': sdev, 'dstInterface': ddev,
+                                'srcNet': 'N/A', 'dstNet': dip, 
+                                'extra': 'need to add interface info'
+                            }
+                            json_result['connInfo'].append(cinfo)
+                        src_ssh.send_cmd('ip a del %s dev %s' % (sip, sdev))
+                        src_ssh.send_cmd('ip l set dev %s down' % (sdev))
+                        src_ssh.send_cmd('ip l set dev %s arp off' % (sdev))
+                        src_ssh.send_cmd('ip l set dev %s up' % (sdev))
+                        src_ssh.send_cmd('ip l set dev %s arp on' % (sdev))
+                        dst_ssh.send_cmd('ip l set dev %s down' % (ddev))
+                        dst_ssh.send_cmd('ip l set dev %s arp off' % (ddev))
+                        dst_ssh.send_cmd('ip l set dev %s up' % (ddev))
+                        dst_ssh.send_cmd('ip l set dev %s arp on' % (ddev))
+        print json.dumps(json_result)
+        return 0
+                                          
 
     def undo(self, his=None):
         '''还原服务器操作
@@ -615,10 +841,12 @@ class DevManager(object):
         pass
 
     def run(self): 
-        parser = argparse.ArgumentParser(description="Manager")
+        parser = argparse.ArgumentParser(description="Dev Manager")
         parser.add_argument('--set', help = 'set switch/server info', action = 'store_true')
         parser.add_argument('--get-sw', help = 'get switch info', action = 'store_true')
         parser.add_argument('--get-sv', help = 'get server info', action = 'store_true')
+        parser.add_argument('--get-conn', help = 'get connectivity info', action = 'store_true')
+        parser.add_argument('--get-nbrs', help = 'get neighbors', action = 'store_true')
         parser.add_argument('--L2', help = 'get l2 info', action = 'store_true')
         parser.add_argument('--L3', help = 'get l3 info', action = 'store_true')
         parser.add_argument('--If', help = 'get interface info', action = 'store_true')
@@ -656,13 +884,30 @@ class DevManager(object):
                 self.get_sv_if()
             elif args.SR:
                 self.get_sv_sr()
+        elif args.get_conn:
+            src = self.data['src']
+            dst = self.data['dst']
+            ret = self.iup_review(src['ip'], src['username'], src['password'])
+            if ret != common.SUCCESS:
+                return ret
+            ret = self.iup_review(dst['ip'], dst['username'], dst['password'])
+            if ret != common.SUCCESS:
+                return ret
+            self.get_connectivity()  #没有检查devType，因为是直接从设备对象读取而非用户输入
+        elif args.get_nbrs:
+            ret = self.iup_review(self.data['ip'], self.data['username'], self.data['password'])
+            if ret != common.SUCCESS:
+                return ret
+            self.get_nbrs() 
 
 
 if __name__ == '__main__':
     m = DevManager()
-    m.run()
+    #m.get_connectivity()
+    #m.run()
     # ifconfig | grep -A1 eth0 | grep inet | awk '{print $2}' | awk 'BEGIN{FS=":"}{print $2}'
     # ip address add 192.168.50.50/24 broadcast + dev eth0 label eth0:1
+    m.get_connectivity2()
     '''
     m.data = {
     u'Switch': [

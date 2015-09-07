@@ -297,8 +297,12 @@ var currentTextEditor = null;
 /**wb mod instance config pannel*/
 var currentConfigDiv = null;
 /**wb mod instance dev info pannel*/
-var currentInfoDiv = null;
+var currentInfoDiv = [];
 var CURRENT_DATA = {};
+/**wb mod instance dev connectivity pannel*/
+var currentConnDiv = [];
+/**wb mod instance dev's connected neighbors pannel*/
+var currentNbrsDiv = [];
 
 /**Current selected figure id ( -1 if none selected)*/
 var selectedFigureId = -1;
@@ -557,7 +561,10 @@ function setUpTextEditorPopup(shape, textPrimitiveId) {
     currentTextEditor = Builder.constructTextPropertiesPanel(textEditor, textEditorTools, shape, textPrimitiveId);
 }
 
-//wb mod
+/**wb mod 建立设备弹出面板
+ *@param {shape} - 设备的图形对象
+ *@param {coords} [x坐标，y坐标] - 图形的坐标
+ **/
 function setUpConfigPopup(shape, coords) {
     // 
     var configDiv = document.getElementById('configure-panel'); //a <div> inside editor page
@@ -566,12 +573,74 @@ function setUpConfigPopup(shape, coords) {
     currentConfigDiv = Builder.constructConfigPanel(configDiv, shape, coords);
 }
 
-//wb mod
+/**wb mod 建立设备弹出面板
+ *@param {shape} - 设备的图形对象id
+ *@param {devType} - 设备类型（交换机/服务器）
+ *@param {queryType} - 查询类型
+ **/ 
 function setUpInfoPopup(figureId, devType, queryType) {
     //a <div> inside editor page
-    var configDiv = document.getElementById('info-panel-' + devType + queryType); 
+    var date = new Date();
+    var container = document.getElementById('container');
+    var configDiv = document.createElement('div');
+    configDiv.id = 'info-panel-' + devType + queryType + date.getTime();
+    container.appendChild(configDiv);
+    currentInfoDiv.push(Builder.constructDevInfo(configDiv, figureId, devType, queryType))
+}
+
+/**
+  * wb mod 销毁所有设备属性窗口
+ **/ 
+function destoryInfoPopup() {
+    for (var i in currentConfigDiv) {
+        currentInfoDiv[i].destroy();
+    }
+    currentInfoDiv = [];
+}
+
+/**wb mod 建立联通性弹出面板
+ * @param {connId} - 连接线对象id
+ * @param {coords} - 双击连接线时鼠标位置
+ **/ 
+function setUpConnPopup(connId, coords) {
+    //a <div> inside editor page
+    var conConnDiv = document.getElementById('info-panel-conn'); 
     // set current Text editor to use it further in code
-    currentInfoDiv = Builder.constructDevInfo(configDiv, figureId, devType, queryType);
+    currentConnDiv.push(Builder.constructConnInfo(conConnDiv, connId, coords))
+}
+
+/**
+  * wb mod 销毁所有联通性弹出面板
+ **/ 
+function destoryConnPopup() {
+    for (var i in currentConnDiv) {
+        currentConnDiv[i].destroy();
+    }
+    currentConnDiv = [];
+}
+
+/**wb mod 建立设备邻居弹出面板
+ * @param {figureId} - 连接线对象id
+ * @param {coords} - 鼠标位置
+ **/ 
+function setUpNbrsPopup(figureId, coords) {
+    //a <div> inside editor page
+    var date = new Date();
+    var container = document.getElementById('container');
+    var nbrsDiv = document.createElement('div');
+    nbrsDiv.id = 'info-panel-nbrs' + date.getTime();
+    container.appendChild(nbrsDiv);
+    currentNbrsDiv.push(Builder.constructNbrsInfo(nbrsDiv, figureId, coords))
+}
+
+/**
+  * wb mod 销毁所有联通性弹出面板
+ **/ 
+function destoryNbrsPopup() {
+    for (var i in currentNbrsDiv) {
+        currentNbrsDiv[i].destroy();
+    }
+    currentNbrsDiv = [];
 }
 
 
@@ -580,7 +649,7 @@ function setUpInfoPopup(figureId, devType, queryType) {
  * @param  {Function} fFunction - the function used to create the figure
  * @param  {String} thumbURL - the URL to the thumb of the image
  **/
-function createFigure(fFunction, thumbURL){
+function createFigure(fFunction, thumbURL) {
     //Log.info('createFigure (' + fFunction + ',' + thumbURL + ')');
     
     createFigureFunction = fFunction;
@@ -602,9 +671,8 @@ function createFigure(fFunction, thumbURL){
             currentConfigDiv.destroy();
             currentConfigDiv = null;
         }
-        if (currentInfoDiv !== null) {
-            currentInfoDiv.destroy();
-            currentInfoDiv = null;
+        if (currentInfoDiv.length > 0) {
+            destoryInfoPopup();
         }
     }
 
@@ -627,9 +695,8 @@ function resetToNoneState() {
             currentConfigDiv.destroy();
             currentConfigDiv = null;
         }
-        if (currentInfoDiv !== null) {
-            currentInfoDiv.destroy();
-            currentInfoDiv = null;
+        if (currentInfoDiv.length > 0) {
+            destoryInfoPopup();
         }
     }
 
@@ -902,9 +969,8 @@ function onKeyDown(ev){
                     currentConfigDiv.destroy();
                     currentConfigDiv = null;
                 }
-                if (currentInfoDiv !== null) {
-                    currentInfoDiv.destroy();
-                    currentInfoDiv = null;
+                if (currentInfoDiv.length > 0) {
+                    destoryInfoPopup();
                 }
             }
 
@@ -1193,9 +1259,8 @@ function onMouseDown(ev){
                     currentConfigDiv.destroy();
                     currentConfigDiv = null;
                 }
-                if (currentInfoDiv !== null) {
-                    currentInfoDiv.destroy();
-                    currentInfoDiv = null;
+                if (currentInfoDiv.length > 0) {
+                    destoryInfoPopup();
                 }
 
                 state = STATE_NONE;
@@ -1232,7 +1297,8 @@ function onMouseDown(ev){
                 case 'Connector':
                     selectedConnectorId = selectedObject.id;
                     state = STATE_CONNECTOR_SELECTED;
-                    setUpEditPanel(CONNECTOR_MANAGER.connectorGetById(selectedConnectorId));
+                    //wbmod
+                    //setUpEditPanel(CONNECTOR_MANAGER.connectorGetById(selectedConnectorId));
                     Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONNECTOR_SELECTED');
                     redraw = true;
                     break;
@@ -1252,7 +1318,7 @@ function onMouseDown(ev){
                 case 'Container':
                     selectedContainerId = selectedObject.id;
                     state = STATE_CONTAINER_SELECTED;
-                    setUpEditPanel(STACK.containerGetById(selectedContainerId));
+                    //setUpEditPanel(STACK.containerGetById(selectedContainerId));
                     Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
                     redraw = true;
                     break;
@@ -1568,7 +1634,10 @@ function onMouseDown(ev){
         case STATE_CONNECTOR_PICK_FIRST:
             //moved so it can be called from undo action
             //console.log('mouse down');
-            connectorPickFirst(x,y,ev);
+            var ret = connectorPickFirst(x,y,ev);
+            if (ret === -2) {
+                state = STATE_NONE;
+            }
             break;
 
         case STATE_CONNECTOR_PICK_SECOND:
@@ -1598,7 +1667,8 @@ function onMouseDown(ev){
              *      - deselect connector
              *      - select canvasProps
              **/
-                        
+
+            /* wbmod 暂时不允许调整连接点            
             var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(selectedConnectorId);
             var start = cps[0];
             var end = cps[1];
@@ -1688,7 +1758,11 @@ function onMouseDown(ev){
                             break;
                     }
                 }                                                    
-            }                        
+            }*/ 
+            selectedConnectorId = -1;
+            state = STATE_NONE;
+            redraw = true;
+            /*wbmod end*/                        
             break; //end case STATE_CONNECTOR_SELECTED 
             
             
@@ -1977,7 +2051,19 @@ function onMouseUp(ev){
             //select the current connector
             state = STATE_CONNECTOR_SELECTED;
             var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
-            setUpEditPanel(con);
+            //wbmod 把终点保存在connector中
+            var fOverId = STACK.figureGetByXY(x,y);
+            if (fOverId === -1) {
+                alert("请连接到一台设备以进行联通性判断");
+                CONNECTOR_MANAGER.connectorRemoveById(selectedConnectorId, true);
+                state = STATE_NONE;
+            }
+            else {
+                con.dstDev = STACK.figureGetById(fOverId);
+            }
+            //console.log(con);
+            //setUpEditPanel(con);
+            //wbmod end
             redraw = true;
             break;
 
@@ -2427,6 +2513,8 @@ function onMouseMove(ev){
             
         case STATE_CONNECTOR_PICK_FIRST:
             //change FCP (figure connection points) color
+            //console.log("%d:%d", x, y);
+            //点击连接线图标后，若鼠标滑过连接点时连接点变色
             var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
 
             if(fCpId != -1){ //we are over a figure's CP
@@ -2611,7 +2699,26 @@ function onDblClick(ev) {
         shape = connector;
         textPrimitiveId = 0; // (0 by default)
 
-        //TODO : 添加对connector的处理
+        //wbmod TODO : 添加对connector的处理
+        var con = CONNECTOR_MANAGER.connectorGetById(cId);
+        var src = con.srcDev;
+        var dst = con.dstDev;
+        var data = {
+            src: {
+                'ip': src.props.ip, 
+                'username': src.props.userName, 
+                'password': src.props.passwd, 
+                'dev': src.devType === 'Switch' ? 'sw' : 'sv'
+            },
+            dst: {
+                'ip': dst.props.ip,
+                'username': dst.props.userName, 
+                'password': dst.props.passwd, 
+                'dev': dst.devType === 'Switch' ? 'sw' : 'sv'
+            }
+        }
+        getConnectivity(data, cId, coords);
+        //setUpConnPopup(cId, coords);
 
     } else {
         cId = CONNECTOR_MANAGER.connectorGetByTextXY(x, y);
@@ -2708,20 +2815,36 @@ function onDblClick(ev) {
  **/
 function connectorPickFirst(x, y, ev){
     Log.group("connectorPickFirst");
+    //wb mod 联通性判断
+    //取得坐标所在的figure（不在任意figure则返回-1）
+    var fOverId = STACK.figureGetByXY(x,y);
+    if (fOverId === -1) {
+        alert("请以一台设备为起点以进行联通性判断");
+        return -2;
+    }
+    var fObj = STACK.figureGetById(fOverId);
+    //console.log(fObj.props);
+    if ( !fObj.props.ip || !fObj.props.userName || !fObj.props.passwd) {
+        alert("请先输入起始设备的ip、用户名和密码");
+        return -2;
+    }
+
     //create connector
-    var conId = CONNECTOR_MANAGER.connectorCreate(new Point(x, y),new Point(x+10,y+10) /*fake cp*/, connectorType);
+    var conId = CONNECTOR_MANAGER.connectorCreate(new Point(x, y),new Point(x+10,y+10) /*fake cp*/,
+                connectorType, fObj, null);
     selectedConnectorId = conId;
     var con = CONNECTOR_MANAGER.connectorGetById(conId);
+    //console.log(con);
     
-
     //TRY TO GLUE IT
-    //1.get CP of the connector 取得连接线上的connectionPoint（实际包括起点和终点）
+    //1.get CP of the connector 取得连接线上的connectionPoint（conCps[0]：起点，conCps[1]：终点）
     var conCps = CONNECTOR_MANAGER.connectionPointGetAllByParent(conId);
 
-    //get Figure's id if over it 取得坐标所在的figure（不在任意figure则返回-1）
-    var fOverId = STACK.figureGetByXY(x,y);
+    //get Figure's id if over it
+    //var fOverId = STACK.figureGetByXY(x,y);  //wb mod 提前至函数开始
+
     //get the ConnectionPoint's id if we are over it (and belonging to a figure) 
-    //取得坐标所在的图形上的connectionPoint（不属于connectionPoint则返回-1）
+    //若按下鼠标的坐标属于某一connectionPoint范围内，则返回该connectionPoint的id（否则返回-1）
     //find figure's CP
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); 
 
@@ -2730,6 +2853,7 @@ function connectorPickFirst(x, y, ev){
         var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
 
         //update connector' cp
+        //连接线的起点在figure上的某一连接点范围内，将连接线起点坐标修改为该连接点坐标
         conCps[0].point.x = fCp.point.x;
         conCps[0].point.y = fCp.point.y;                    
 
@@ -2745,10 +2869,11 @@ function connectorPickFirst(x, y, ev){
         
         /*As we are over a {Figure} but not over a {ConnectionPoint} we will switch
          * to automatic connection
-         * 坐标在figure内部但不属于figure上的connectionPoint，
-         * 此时自动选择一个connectionPoint建立对应关系
+         * 坐标在figure内部但不在figure上的任意connectionPoint范围内，
+         * 此时自动选择一个图形中距离当前坐标最近的连接点
          */
         var point = new Point(x,y);
+        //console.log("%d:%d", x, y);
         var candidate = CONNECTOR_MANAGER.getClosestPointsOfConnection(
             true,    // automatic start
             true,    // automatic end 
@@ -2756,8 +2881,9 @@ function connectorPickFirst(x, y, ev){
             point,   //start point 
             fOverId, //end figure's id
             point    //end point
-        );
-
+        ); 
+        //candidate: [始连接点对象, 终连接点对象, 始连接点id, 终连接点id]
+        //console.log(candidate);
         var connectionPoint = candidate[0];
 
         //update connector' cp
@@ -2789,7 +2915,8 @@ function connectorPickSecond(x, y, ev){
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
 
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
-    var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+    //find figure's CP
+    var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); 
     //get Figure's id if over it
     var fOverId = STACK.figureGetByXY(x,y);
 
@@ -3944,9 +4071,8 @@ function action(action){
                     currentConfigDiv.destroy();
                     currentConfigDiv = null;
                 }
-                if (currentInfoDiv !== null) {
-                    currentInfoDiv.destroy();
-                    currentInfoDiv = null;
+                if (currentInfoDiv.length > 0) {
+                    destoryInfoPopup();
                 }
             }
 
@@ -3971,9 +4097,8 @@ function action(action){
                     currentConfigDiv.destroy();
                     currentConfigDiv = null;
                 }
-                if (currentInfoDiv !== null) {
-                    currentInfoDiv.destroy();
-                    currentInfoDiv = null;
+                if (currentInfoDiv.length > 0) {
+                    destoryInfoPopup();
                 }
             }
 
@@ -4013,9 +4138,8 @@ function action(action){
                     currentConfigDiv.destroy();
                     currentConfigDiv = null;
                 }
-                if (currentInfoDiv !== null) {
-                    currentInfoDiv.destroy();
-                    currentInfoDiv = null;
+                if (currentInfoDiv.length > 0) {
+                    destoryInfoPopup();
                 }
             }
             selectedFigureId = -1;
@@ -4034,9 +4158,8 @@ function action(action){
                     currentConfigDiv.destroy();
                     currentConfigDiv = null;
                 }
-                if (currentInfoDiv !== null) {
-                    currentInfoDiv.destroy();
-                    currentInfoDiv = null;
+                if (currentInfoDiv.length > 0) {
+                    destoryInfoPopup();
                 }
             }
             selectedFigureId = -1;            
@@ -4055,9 +4178,8 @@ function action(action){
                     currentConfigDiv.destroy();
                     currentConfigDiv = null;
                 }
-                if (currentInfoDiv !== null) {
-                    currentInfoDiv.destroy();
-                    currentInfoDiv = null;
+                if (currentInfoDiv.length > 0) {
+                    destoryInfoPopup();
                 }
             }
             selectedFigureId = -1;            
@@ -4694,16 +4816,18 @@ function getDevInfo(ip, username, password, devType, queryType, figureId){
 }
 
 /**
- * 获取设备联通性
- * @param {Object} data 需要判断联通性的两台设备的信息json串，格式如下：
+ * 获取设备联通性，判断一个连接线对象所连的两台设备间的联通性
+ * @param {data} 需要判断联通性的两台设备的信息json串，格式如下：
           {
           src: {'ip': '1.1.1.1', 'username': 'root', 'password': '123456', 'dev': 'sw/sv'},
           dst: {'ip': '1.1.1.1', 'username': 'root', 'password': '123456', 'dev': 'sw/sv'}
           }
+ * @param {cId} 连接线对象id
+ * @param {coords} 弹出窗口坐标
  */
-function getConnectivity(data){
+function getConnectivity(data, cId, coords){
     var request = new XMLHttpRequest();
-    request.open('POST', '/getDevInfo');
+    request.open('POST', '/getConnectivity');
     request.setRequestHeader('Context-Type', 'application/x-www-form-urlencoded');
     //收到服务器respone时的回调函数
     request.onreadystatechange = function(){
@@ -4711,13 +4835,18 @@ function getConnectivity(data){
             try{
                 /*由后台接收到JSON字符串转，换为JSON对象，后台返回的JSON串格式为：
                 {
-                    'cFlag': 'connected/remote',
-                    'cType': 'full/forward/reverse',
-                    'cInterface': 'eth0>eth1',
-                    'cSubnet': '192.168.1.5/24>191.168.3.6/24'
+                    'isConnect' : '0/1',
+                    'connInfo' : [
+                        {
+                            'cFlag': 'connected/remote', 'cType': 'full/forward/reverse',
+                            'srcIface': 'eth0', 'dstIface': 'ech1',
+                            'srcNet': '192.168.1.5/24', 'dstNet': '191.168.3.6/24',
+                            'extra': '',
+                        },
+                        ...
+                    ]
                 } */
                 var ret = JSON.parse(request.responseText);
-
             }catch(e){
                 alert(request.responseText);
                 return;
@@ -4730,11 +4859,48 @@ function getConnectivity(data){
                 return;
             }
             CURRENT_DATA = ret;
-            setUpInfoPopup(figureId, devType, queryType);          
+            setUpConnPopup(cId, coords);          
         }
     };
     request.send('data=' + JSON.stringify(data));  //将JSON对象转化为JSON字符串，发给后台 
 }
+
+/**
+ * 获取设备的直连邻居设备
+ * @param {data} 发往后台的数据，格式如下：
+ *               {'ip': '1.1.1.1', 'username': 'root', 'password':'123', 'devType': 'sw/sv'}
+ * @param {figureId} 设备对象id
+ */
+function getNbrs(data, figureId) {
+    var request = new XMLHttpRequest();
+    request.open('POST', '/getNbrs');
+    request.setRequestHeader('Context-Type', 'application/x-www-form-urlencoded');
+    //收到服务器respone时的回调函数
+    request.onreadystatechange = function(){
+        if(request.readyState === 4 && request.status === 200){
+            try{
+                /*由后台接收到JSON字符串转，换为JSON对象，后台返回的JSON串格式为：
+                [{'dev': '接口1', nbrs: [{'ip': '邻居ip', 'mac': '邻居mac'}, ...]}, ...]
+                 */
+                var ret = JSON.parse(request.responseText);
+            }catch(e){
+                alert(request.responseText);
+                return;
+            }
+            //ret = JSON.parse(ret);
+            //console.log(ret);
+            //console.log(typeof(ret));
+            if(ret['err']){
+                alert('ERROR\n' + ret['err']);
+                return;
+            }
+            CURRENT_DATA = ret;
+            setUpNbrsPopup(figureId);          
+        }
+    };
+    request.send('data=' + JSON.stringify(data));  //将JSON对象转化为JSON字符串，发给后台 
+}
+
 
 /*
  * 参数检查
@@ -4819,6 +4985,9 @@ PropsHandler['vmembers'] = function(attr) {
     
     return true;
 }
+
+
+
 /*
  * 取得滚动条偏移量
  */
@@ -4833,6 +5002,107 @@ function getScrollOffsets(w) {
         return {x: d.documentElement.scrollLeft, y: d.documentElement.scrollTop};
     // For browsers in Quirks mode
     return { x: d.body.scrollLeft, y: d.body.scrollTop };
+}
+
+/**
+ * 在指定div上生成拖拽移动监听器
+ * @param {object} targetDiv - 目标div的dom对象，可以与待拖拽div相同（此时可对div任意部分
+ * 进行拖拽移动），也可以是待拖拽div的子节点（此时在该子节内部按下并移动鼠标可拖拽整个div）。
+ * @param {object} containerDiv - 待拖拽的div元素dom对象，可与targetDiv相同，也可以是targetDiv
+ * 的父节点。
+ * @param {string} canvasId - 画布元素的jQuery对象，用于在画布滚屏情况下计算偏移量。
+ */
+function divMovable(targetDiv, containerDiv, canvas){
+    targetDiv.onmousedown = function (cDiv){
+        return function(event){
+            //获取鼠标当前位置（加上滚动条偏移量）
+            var scroll = getScrollOffsets();
+            //console.log(scroll);
+            var startX = event.clientX + scroll.x;
+            var startY = event.clientY + scroll.y;
+            //console.log('start: (%d, %d)', startX, startY);
+            //获取containerDiv的绝对位置（相对document，而非父元素）
+            var con = jQuery(cDiv);   //转化为jQuery对象，方便获取坐标，使用dom对象也可实现
+            var origX = con.offset().left;
+            var origY = con.offset().top;
+            //console.log('orig: (%d, %d)', origX, origY);
+            //计算鼠标位置与containerDiv位置之差，用于移动时保持div位置
+            var deltaX = startX - origX;
+            var deltaY = startY - origY;
+            //console.log('delta: (%d, %d)', deltaX, deltaY);
+            // 注册鼠标移动和放开事件
+            if (document.addEventListener) { 
+                //标准时间模型，在document上注册handler 
+                document.addEventListener("mousemove", moveHandler, true);
+                document.addEventListener("mouseup", upHandler, true);
+            }
+            else {  //不支持ie8
+                alert('请使用IE9以上版本浏览器');
+                return;
+            }
+            // 取消事件冒泡
+            if (event.stopPropagation) event.stopPropagation();  // Standard model
+            else event.cancelBubble = true;                      // IE
+            // 阻止默认行为
+            if (event.preventDefault) event.preventDefault();   // Standard model
+            else event.returnValue = false;                     // IE
+            /**
+             * 按下鼠标且移动时，改变要移动的div元素的坐标
+             **/
+            function moveHandler(e) {
+                if (!e) e = window.event;  // IE event Model
+                var scroll = getScrollOffsets();
+                //获取containerDiv元素的包含块的绝对坐标（相对document）
+                var parentX = con.parent().offset().left;
+                var parentY = con.parent().offset().top;
+                //由于canvas滚动时可能导致包含块的内边界拉伸，造成了containerDiv
+                //定位时出现偏差，因此需要随时计算其偏移量进行修正
+                var modX = canvas.offset().left;
+                var modY = canvas.offset().top;
+                //由于style.left是相对包含块的坐标，而e.clientX + scroll.x - deltaX
+                //是相对document的坐标，因此需要减去包含块坐标
+                var left = e.clientX + scroll.x - deltaX;
+                //限制x方向的拖动上限，防止拖出包含块范围导致无法再次拖动
+                if(left <= parentX){
+                    //canvas偏移量修正
+                    cDiv.style.left = parentX - modX + 'px';
+                } else {
+                    //canvas偏移量修正
+                    cDiv.style.left = left - modX + 'px';
+                }
+                var top = e.clientY + scroll.y - deltaY;
+                //限制y方向的拖动上限，防止拖出父元素范围导致无法再次拖动
+                if(top <= parentY){
+                    cDiv.style.top = parentY - modY + 'px';
+                } else {
+                    cDiv.style.top = top - modY + 'px';
+                }
+                // And don't let anyone else see this event.
+                if (e.stopPropagation) e.stopPropagation();  // Standard
+                else e.cancelBubble = true;                  // IE
+            }  
+            /**
+             * 释放鼠标按键时，注销事件
+             **/
+            function upHandler(e) {
+                if (!e) e = window.event;  // IE Event Model
+                // Unregister the capturing event handlers.
+                if (document.removeEventListener) {  // DOM event model
+                    document.removeEventListener("mouseup", upHandler, true);
+                    document.removeEventListener("mousemove", moveHandler, true);
+                }
+                else if (document.detachEvent) {  // IE 5+ Event Model
+                    cDiv.detachEvent("onlosecapture", upHandler);
+                    cDiv.detachEvent("onmouseup", upHandler);
+                    cDiv.detachEvent("onmousemove", moveHandler);
+                    cDiv.releaseCapture();
+                }
+                // 阻止事件冒泡
+                if (e.stopPropagation) e.stopPropagation();  // Standard model
+                else e.cancelBubble = true;                  // IE
+            }
+        }
+    }(containerDiv);
 }
 
 

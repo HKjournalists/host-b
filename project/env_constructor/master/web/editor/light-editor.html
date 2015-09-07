@@ -90,7 +90,6 @@
         <script type="text/javascript" src="./lib/builder.js"></script>        
         <script type="text/javascript" src="./lib/text.js"></script>
         <script type="text/javascript" src="./lib/log.js"></script>
-        <script type="text/javascript" src="./lib/text.js"></script>
         <script type="text/javascript" src="./lib/browserReady.js"></script>
         <script type="text/javascript" src="./lib/containers.js"></script>
         <script type="text/javascript" src="./lib/importer.js"></script>
@@ -102,12 +101,15 @@
         <!--  end  -->
 
         <script type="text/javascript" src="./lib/sets/basic/basic.js"></script>
+        
+        
+        <!--  wb mod  
         <script type="text/javascript" src="./lib/sets/experimental/experimental.js"></script>
         <script type="text/javascript" src="./lib/sets/network/network.js"></script>
         <script type="text/javascript" src="./lib/sets/secondary/secondary.js"></script>
         <script type="text/javascript" src="./lib/sets/statemachine/statemachine.js"></script>
-        
         <script type="text/javascript" src="./lib/minimap.js"></script>
+        end -->
 
         <script type="text/javascript" src="./lib/commands/History.js"></script>
 
@@ -337,13 +339,14 @@
                     <div id="text-editor"></div>
                     <div id="text-editor-tools"></div>
                     <div id="configure-panel"></div>
-
-                        <div id="info-panel-swL2"></div>
-                        <div id="info-panel-swL3"></div>
-                        <div id="info-panel-swSR"></div>
-                        <div id="info-panel-svIf"></div>
-                        <div id="info-panel-svSR"></div>
-
+                    <!--
+                    <div id="info-panel-swL2"></div>
+                    <div id="info-panel-swL3"></div>
+                    <div id="info-panel-swSR"></div>
+                    <div id="info-panel-svIf"></div>
+                    <div id="info-panel-svSR"></div>
+                    <div id="info-panel-conn"></div>
+                    -->
                 </div>
             </div>
             
@@ -371,8 +374,8 @@
                 <input type="image" src="./assets/images/import.gif"/>
             </form>
         </div>
-
-        <!--Insert Image dialog content-->
+        <!-- wb mod 20150723 : 废弃-->
+        <!--Insert Image dialog content
         <div id="insert-image-dialog">
             <h2>Insert Image</h2>
             <form action="./common/controller.php" method="POST" target="upload_target" enctype="multipart/form-data">
@@ -400,8 +403,9 @@
                 </div>
             </form>
         </div>
-        
-        <!--Insert Image hidden iframe-->
+        -->
+        <!-- wb mod 20150723 : 废弃-->
+        <!--Insert Image hidden iframe
         <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
 
         <script type="text/javascript">
@@ -420,5 +424,6 @@
         </script>
         <br/>
          <? //require_once dirname(__FILE__) . '/common/analytics.php';?>
+         -->
     </body>
 </html>

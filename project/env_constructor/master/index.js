@@ -15,6 +15,8 @@ handle['GET']['.gif'] = requestHandlers.bin;
 handle['GET']['.ico'] = requestHandlers.bin;
 handle['POST']['/submitJson'] = requestHandlers.submitJson;
 handle['POST']['/getDevInfo'] = requestHandlers.getDevInfo;
+handle['POST']['/getConnectivity'] = requestHandlers.getConnectivity;
+handle['POST']['/getNbrs'] = requestHandlers.getNbrs;
 
 server.run(router, handle);
 

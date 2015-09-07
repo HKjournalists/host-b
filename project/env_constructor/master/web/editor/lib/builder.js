@@ -84,7 +84,7 @@ Builder.IMAGE_TEXT_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-text.png' ;
  *@param {DOMObject} DOMObject - the div of the properties panel
  *@param {Figure} shape - the figure for which the properties will be displayed
  **/
-Builder.constructPropertiesPanel = function(DOMObject, shape){
+Builder.constructPropertiesPanel = function(DOMObject, shape) {
     for(var i = 0; i < shape.properties.length; i++){
         // regExp to avoid properties of Text editor
         // && /(props\.)\.*/g.test(shape.properties[i].property) === false
@@ -105,7 +105,7 @@ Builder.constructPropertiesPanel = function(DOMObject, shape){
  *@return {TextEditorPopup} - new instance of TextEditorPopup after init
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
-Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, shape, textPrimitiveId){
+Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, shape, textPrimitiveId) {
     var textEditor = new TextEditorPopup(textEditor, textEditorTools, shape, textPrimitiveId);
     textEditor.init();
 
@@ -113,7 +113,7 @@ Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, sha
 };
 
 //wb mod
-Builder.constructConfigPanel = function(configDiv, shape, coords){
+Builder.constructConfigPanel = function(configDiv, shape, coords) {
     //console.log('constructConfigPanel')
     var cfgPanel = new ConfigPopup(configDiv, shape, coords);
     cfgPanel.init();
@@ -124,12 +124,34 @@ Builder.constructConfigPanel = function(configDiv, shape, coords){
 /*wb mod
 * 建立设备信息面板
 */
-Builder.constructDevInfo = function(configDiv, figureId, devType, queryType){
+Builder.constructDevInfo = function(configDiv, figureId, devType, queryType) {
     var infoPanel = new devInfoPopup(configDiv, figureId, devType, queryType);
     infoPanel.init();
     return infoPanel;
+};
 
-    
+/** wb mod
+ * 建立联通性面板
+ * @param {conConnDiv} - 面板的父div
+ * @param {connId} - 连接线对象的id
+ * @param {coords} - 双击鼠标的位置
+ **/
+Builder.constructConnInfo = function(conConnDiv, connId, coords) {
+    var infoPanel = new connInfoPopup(conConnDiv, connId, coords);
+    infoPanel.init();
+    return infoPanel;
+};
+
+/** wb mod
+ * 建立邻居信息面板
+ * @param {conConnDiv} - 面板的父div
+ * @param {figureId} - 连接线对象的id
+ * @param {coords} - 鼠标位置
+ **/
+Builder.constructNbrsInfo = function(nbrsDiv, figureId, coords) {
+    var infoPanel = new nbrsInfoPopup(nbrsDiv, figureId);
+    infoPanel.init();
+    return infoPanel;
 };
 
 /**
@@ -1729,7 +1751,8 @@ devInfoPopup.prototype = {
         var dragDiv = document.createElement('div');
         dragDiv.className = 'tLabel';
         //dragDiv.textContent = 'Test'
-        this.movable(dragDiv, this.configDiv, $('#a'));     
+        //this.movable(dragDiv, this.configDiv, $('#a')); 
+        divMovable(dragDiv, this.configDiv, $('#a'));     
         this.configDiv.appendChild(dragDiv);
         var closeButton = document.createElement('button');
         closeButton.type = 'button';
@@ -1743,6 +1766,24 @@ devInfoPopup.prototype = {
             }
         }(this.configDiv);
         this.configDiv.appendChild(closeButton);
+        var nbrsButton = document.createElement('button');  //扫描直连设备
+        nbrsButton.type = 'button';
+        nbrsButton.className = 'closeButton';
+        nbrsButton.textContent = 'scan nbrs';
+        nbrsButton.onclick = function (div, figureId){
+            return function(event){
+                //console.log(event.clientX);
+                var f = STACK.figureGetById(figureId);
+                var data = {
+                    'ip': f.props.ip, 
+                    'username': f.props.userName, 
+                    'password': f.props.passwd, 
+                    'devType': f.devType === 'Switch' ? 'sw' : 'sv'
+                }
+                getNbrs(data, f.id);
+            }
+        }(this.configDiv, this.figureId);
+        this.configDiv.appendChild(nbrsButton);
         var table = this.buildTable(titles);
         table.className = 'infotab';
         for(var index in CURRENT_DATA){
@@ -1799,107 +1840,6 @@ devInfoPopup.prototype = {
         return table;
     },
 
-    /**
-     * 在指定div上生成拖拽移动监听器
-     * @param {object} targetDiv - 目标div的dom对象，可以与待拖拽div相同（此时可对div任意部分
-     * 进行拖拽移动），也可以是待拖拽div的子节点（此时在该子节内部按下并移动鼠标可拖拽整个div）。
-     * @param {object} containerDiv - 待拖拽的div元素dom对象，可与targetDiv相同，也可以是targetDiv
-     * 的父节点。
-     * @param {string} canvasId - 画布元素的jQuery对象，用于在画布滚屏情况下计算偏移量。
-     */
-    movable : function(targetDiv, containerDiv, canvas){
-        targetDiv.onmousedown = function (cDiv){
-            return function(event){
-                //获取鼠标当前位置（加上滚动条偏移量）
-                var scroll = getScrollOffsets();
-                //console.log(scroll);
-                var startX = event.clientX + scroll.x;
-                var startY = event.clientY + scroll.y;
-                //console.log('start: (%d, %d)', startX, startY);
-                //获取containerDiv的绝对位置（相对document，而非父元素）
-                var con = jQuery(cDiv);   //转化为jQuery对象，方便获取坐标，使用dom对象也可实现
-                var origX = con.offset().left;
-                var origY = con.offset().top;
-                //console.log('orig: (%d, %d)', origX, origY);
-                //计算鼠标位置与containerDiv位置之差，用于移动时保持div位置
-                var deltaX = startX - origX;
-                var deltaY = startY - origY;
-                //console.log('delta: (%d, %d)', deltaX, deltaY);
-                // 注册鼠标移动和放开事件
-                if (document.addEventListener) { 
-                    //标准时间模型，在document上注册handler 
-                    document.addEventListener("mousemove", moveHandler, true);
-                    document.addEventListener("mouseup", upHandler, true);
-                }
-                else {  //不支持ie8
-                    alert('请使用IE9以上版本浏览器');
-                    return;
-                }
-                // 取消事件冒泡
-                if (event.stopPropagation) event.stopPropagation();  // Standard model
-                else event.cancelBubble = true;                      // IE
-                // 阻止默认行为
-                if (event.preventDefault) event.preventDefault();   // Standard model
-                else event.returnValue = false;                     // IE
-                /**
-                 * 按下鼠标且移动时，改变要移动的div元素的坐标
-                 **/
-                function moveHandler(e) {
-                    if (!e) e = window.event;  // IE event Model
-                    var scroll = getScrollOffsets();
-                    //获取containerDiv元素的包含块的绝对坐标（相对document）
-                    var parentX = con.parent().offset().left;
-                    var parentY = con.parent().offset().top;
-                    //由于canvas滚动时可能导致包含块的内边界拉伸，造成了containerDiv
-                    //定位时出现偏差，因此需要随时计算其偏移量进行修正
-                    var modX = canvas.offset().left;
-                    var modY = canvas.offset().top;
-                    //由于style.left是相对包含块的坐标，而e.clientX + scroll.x - deltaX
-                    //是相对document的坐标，因此需要减去包含块坐标
-                    var left = e.clientX + scroll.x - deltaX;
-                    //限制x方向的拖动上限，防止拖出包含块范围导致无法再次拖动
-                    if(left <= parentX){
-                        //canvas偏移量修正
-                        cDiv.style.left = parentX - modX + 'px';
-                    } else {
-                        //canvas偏移量修正
-                        cDiv.style.left = left - modX + 'px';
-                    }
-                    var top = e.clientY + scroll.y - deltaY;
-                    //限制y方向的拖动上限，防止拖出父元素范围导致无法再次拖动
-                    if(top <= parentY){
-                        cDiv.style.top = parentY - modY + 'px';
-                    } else {
-                        cDiv.style.top = top - modY + 'px';
-                    }
-                    // And don't let anyone else see this event.
-                    if (e.stopPropagation) e.stopPropagation();  // Standard
-                    else e.cancelBubble = true;                  // IE
-                }  
-                /**
-                 * 释放鼠标按键时，注销事件
-                 **/
-                function upHandler(e) {
-                    if (!e) e = window.event;  // IE Event Model
-                    // Unregister the capturing event handlers.
-                    if (document.removeEventListener) {  // DOM event model
-                        document.removeEventListener("mouseup", upHandler, true);
-                        document.removeEventListener("mousemove", moveHandler, true);
-                    }
-                    else if (document.detachEvent) {  // IE 5+ Event Model
-                        cDiv.detachEvent("onlosecapture", upHandler);
-                        cDiv.detachEvent("onmouseup", upHandler);
-                        cDiv.detachEvent("onmousemove", moveHandler);
-                        cDiv.releaseCapture();
-                    }
-                    // 阻止事件冒泡
-                    if (e.stopPropagation) e.stopPropagation();  // Standard model
-                    else e.cancelBubble = true;                  // IE
-                }
-            }
-        }(containerDiv);
-    },
-
     /*
      * 销毁属性面板
      */
@@ -1907,5 +1847,276 @@ devInfoPopup.prototype = {
         this.configDiv.className = '';
         this.configDiv.style.cssText = '';
         this.configDiv.innerHTML = '';
+    }
+};
+
+/**wb mod 生成联通性信息面板
+ * @param {HTMLElement} configDiv - 包含面板的div元素
+ * @param {figureId}  - 面板所属的figureid
+ * @param {x, y} - 点击鼠标的位置，应以确定属性定义面板的位置
+ */
+function connInfoPopup(conConnDiv, conId, coords){
+    this.conConnDiv = conConnDiv;
+    this.coords = coords;
+    this.srcDev = CONNECTOR_MANAGER.connectorGetById(conId).srcDev;
+    this.dstDev = CONNECTOR_MANAGER.connectorGetById(conId).dstDev;
+}
+
+connInfoPopup.prototype = {
+    
+    constructor : connInfoPopup,
+    /**
+    * init 
+    **/
+    init : function (){
+        var divClass = 'connInfo';
+        var titles = ["Iface(src)", "Iface(dst)", "type", "direction", "extra"];
+        var tdList = [{'key':'srcInterface', 'limit': null}, 
+                      {'key':'dstInterface', 'limit': null}, 
+                      {'key':'cFlag', 'limit': null}, 
+                      {'key':'cType', 'limit': null},
+                      {'key':'extra', 'limit': null}];
+        this.buildPanel(titles, tdList, divClass)
+        this.conConnDiv.className = 'conn';
+        this.conConnDiv.style.left = this.coords[0] + 'px';
+        this.conConnDiv.style.top = this.coords[1] + 'px';
+    },
+
+    /* 构建属性展示面板
+     * @param {list} titles - 标题列表，列表中每一个元素代表信息面板table中的一个th
+     * @param {list} tdList - 用于td中展示属性的列表，形式为{['key': '0', 'limit': 0], ……}
+     *  其中key表示从服务器端取回的包含设备属性的json对象中的key值，
+     *  limit表示在td中一行显示的属性个数
+     * @param {string} divClass - 面板div的class属性名 
+     */
+    buildPanel : function(titles, tdList, divClass) {
+        //console.log(CURRENT_DATA);
+        var dragDiv = document.createElement('div');
+        dragDiv.className = 'tLabel';
+        dragDiv.textContent = 'Connectivity: ' + this.srcDev.props.name + "(src) -> " 
+                              + this.dstDev.props.name + "(dst)";
+        divMovable(dragDiv, this.conConnDiv, $('#a'));     
+        this.conConnDiv.appendChild(dragDiv);
+        var closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'closeButton';
+        closeButton.textContent = 'close';
+        closeButton.onclick = function (div){
+            return function(){
+                div.className = '';
+                div.style.cssText = '';
+                div.innerHTML = '';
+            }
+        }(this.conConnDiv);
+        this.conConnDiv.appendChild(closeButton);
+        if (CURRENT_DATA['isConnect'] === 0) {
+            var unconnDiv = document.createElement('div');
+            unconnDiv.className = 'unConnected';
+            unconnDiv.innerHTML = this.srcDev.props.name + " and " 
+                                  + this.dstDev.props.name + " is unconnected!";
+            this.conConnDiv.appendChild(unconnDiv);
+            return 0;
+        }
+        var table = this.buildTable(titles);
+        table.className = 'infotab';
+        for(var index in CURRENT_DATA['connInfo']){
+            var trDict = CURRENT_DATA['connInfo'][index];
+            var tr = document.createElement("tr");
+            for(var index in tdList){
+                this.buildTd(tr, trDict, tdList[index]['key'], tdList[index]['limit']);
+            }
+            table.appendChild(tr);
+        }
+        this.conConnDiv.appendChild(table);
+    },
+
+    /* 创建table中的td元素，td的内容为dict[key]
+    * @param {tr} - table row的div对象
+    * @param {dict} - 存储要展现数据的字典对象
+    * @param {key} - td对象所展示的内容在dict中的key值，同时用于div的class
+    * 若dict[key]是Array，则将其每一个元素放入td中
+    * @param {limit} - td中每一行的元素个数上限（即输出多少个元素时换行），可选参数
+    */
+    buildTd : function (tr, dict, key, limit) {
+        limit = limit || 1000;
+        var td = document.createElement("td");
+        td.className = key;
+        if(dict[key] && key === 'extra') {
+            var extraButton = document.createElement('button');
+            extraButton.type = 'button';
+            extraButton.className = 'extraButton';
+            extraButton.textContent = 'extra';
+            extraButton.onclick = function (div, info){
+                return function(){
+                    return 0;
+                }
+            }(this.conConnDiv, dict[key]);
+            this.conConnDiv.appendChild(extraButton);
+        }
+        var content = '';
+        var value = dict[key]
+        if(typeof(value) !== 'object' || value.length === 1){
+            content = value
+        } else {    //dict[key]是Array时
+            for(var i in value){  //这里i是string类型，用于计算时要转型
+                content = content + value[i] + ' , ';
+                if((parseInt(i) + 1) % limit === 0){
+                    content += '<br />';
+                }
+            }
+        }
+        td.innerHTML = content;
+        tr.appendChild(td);      
+    },
+
+    /*根据传入的列表创建table title，返回table的div对象
+    * @param {list} titles - title列表
+    */
+    buildTable : function (titles) {
+        var table = document.createElement("table");
+        table.className = 'infotab';
+        var title = document.createElement("tr");
+        for(var i in titles){
+            var td = document.createElement("td");
+            td.innerHTML = titles[i];
+            title.appendChild(td);
+        }
+        table.appendChild(title);
+        return table;
+    },
+
+    /*
+     * 销毁属性面板
+     */
+    destroy : function (){
+        this.conConnDiv.className = '';
+        this.conConnDiv.style.cssText = '';
+        this.conConnDiv.innerHTML = '';
+    }
+};
+
+/**wb mod 生成设备邻居信息面板
+ * @param {HTMLElement} nbrsDiv - 包含面板的div元素
+ * @param {figureId}  - 面板所属的figureid
+ * @param {x, y} - 点击鼠标的位置，应以确定属性定义面板的位置
+ */
+function nbrsInfoPopup(nbrsDiv, figureId, coords){
+    this.mainDiv = nbrsDiv;
+    this.figureId = figureId;
+}
+
+nbrsInfoPopup.prototype = {
+    
+    constructor : nbrsInfoPopup,
+    /**
+    * init 
+    **/
+    init : function (){
+        var divClass ='nbrsInfo';
+        var titles = ['Dev', 'Neighbors'];
+        var tdList = [{'key':'dev', 'limit': null}, {'key':'nbrs', 'limit': 2}];
+        this.mainDiv.className = 'info';
+        this.buildPanel(titles, tdList, divClass);
+        //console.log(this.coords);
+        var pos = $("#a").offset();
+        var posParent = $("#a").parent().offset();
+        this.mainDiv.style.left = posParent.left - pos.left + 30 + 'px';
+        this.mainDiv.style.top = posParent.top - pos.top + 20 + 'px';
+        //this.placeAndAutoSize();
+    },
+
+    /* 构建设备属性展示面板
+     * @param {list} titles - 标题列表，列表中每一个元素代表信息面板table中的一个th
+     * @param {list} tdList - 用于td中展示属性的列表，形式为{['key': '0', 'limit': 0], ……}
+     *  其中key表示从服务器端取回的j包含设备属性的json对象中的key值，
+     *  limit表示在td中一行显示的属性个数
+     * @param {string} divClass - 面板div的class属性名 
+     */
+    buildPanel : function(titles, tdList, divClass){
+        //console.log(CURRENT_DATA);
+        var dragDiv = document.createElement('div');
+        dragDiv.className = 'tLabel';
+        //dragDiv.textContent = 'Test'
+        divMovable(dragDiv, this.mainDiv, $('#a'));     
+        this.mainDiv.appendChild(dragDiv);
+        var closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'closeButton';
+        closeButton.textContent = 'close';
+        closeButton.onclick = function (div){
+            return function(){
+                div.className = '';
+                div.style.cssText = '';
+                div.innerHTML = '';
+            }
+        }(this.mainDiv);
+        this.mainDiv.appendChild(closeButton);
+        var table = this.buildTable(titles);
+        table.className = 'infotab';
+        for(var index in CURRENT_DATA){
+            var trDict = CURRENT_DATA[index];
+            var tr = document.createElement("tr");
+            for(var index in tdList){
+                this.buildTd(tr, trDict, tdList[index]['key'], tdList[index]['limit']);
+            }
+            table.appendChild(tr);
+        }
+        this.mainDiv.appendChild(table);
+    },
+
+    /*
+    * @param {div} tr - table row的div对象
+    * @param {Object} dict - 存储要展现数据的字典对象
+    * @param {string || Array} key - td对象所展示的内容在dict中的key值，同时用于div的class
+    * 若dict[key]是Array，则将其每一个元素放入td中
+    * @param {number} limit - td中每一行的元素个数上限（即输出多少个元素时换行），可选参数
+    */
+    buildTd : function (tr, dict, key, limit) {  //邻居属性需要特殊处理
+        limit = limit || 1000;
+        var td = document.createElement("td");
+        td.className = key;
+        var content = '';
+        var value = dict[key]
+        if(typeof(value) !== 'object'){
+            content = value
+        } else {    //dict[key]是Array时
+            for(var i in value){  //这里i是string类型，用于计算时要转型
+                content += '[ '
+                for(var j in value[i]) {
+                    content += j + ':' + value[i][j] + ' '
+                }
+                content += '] '
+                if((parseInt(i) + 1) % limit === 0){
+                    content += '<br />';
+                }
+            }
+        }
+        td.innerHTML = content;
+        tr.appendChild(td);      
+    },
+
+    /*根据传入的列表创建table title，返回table的div对象
+    * @param {list} titles - title列表
+    */
+    buildTable : function (titles) {
+        var table = document.createElement("table");
+        table.className = 'infotab';
+        var title = document.createElement("tr");
+        for(var i in titles){
+            var td = document.createElement("td");
+            td.innerHTML = titles[i];
+            title.appendChild(td);
+        }
+        table.appendChild(title);
+        return table;
+    },
+
+    /*
+     * 销毁属性面板
+     */
+    destroy : function (){
+        this.mainDiv.className = '';
+        this.mainDiv.style.cssText = '';
+        this.mainDiv.innerHTML = '';
     }
 };

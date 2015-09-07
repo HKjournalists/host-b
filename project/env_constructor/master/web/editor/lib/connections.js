@@ -35,12 +35,17 @@ var connector_defaultConnectorTextBgStyle = "#ffffff";
  *@author Zack Newsham <zack_newsham@yahoo.co.uk>
  *@author Alex Gheorghiu <alex@scriptoid.com>
 */
-function Connector(startPoint,endPoint,type, id){
+function Connector(startPoint, endPoint, type, id){
+    //wb mod arguments[4]、arguments[5]分别表示连接线连接的源、目的设备
     /**Connector's id*/
     this.id = id;
     
     /**An {Array} of {Point}s. They will be used to draw the connector*/
-    this.turningPoints = [startPoint,endPoint];
+    this.turningPoints = [startPoint, endPoint];
+
+    //wb mod 为连接线添加两端连接设备的信息
+    this.srcDev = arguments[4] ? arguments[4] : null;
+    this.dstDev = arguments[5] ? arguments[5] : null;
     
     /**Type of connector. Ex. TYPE_STRAIGHT*/
     this.type = type;

@@ -451,7 +451,7 @@ Untagged port: None'
     '''  
     ####tftp = 'tftp -g -l rootfs.tar.gz -r %s 192.168.30.92' % (file)
     ####print t.shell_cmd(['cd /cftmp', tftp])
-    t.update_system('192.168.30.92', 'rootfs-ly2r_1-0-7-2.tar.gz')
+    #t.update_system('192.168.30.92', 'rootfs-ly2r_1-0-7-2.tar.gz')
     
     #print t.test()
     #print s.getvalue()

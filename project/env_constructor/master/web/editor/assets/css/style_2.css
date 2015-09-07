@@ -105,7 +105,7 @@
     margin-top: 5px;
 }
 
-/*canvas info*/
+/*设备信息 邻居信息*/
 .info {
     float: left;
     position: absolute;
@@ -135,3 +135,34 @@
     border: 1px dotted black;
 }
 
+/*联通性*/
+.conn {
+    float: left;
+    position: absolute;
+    padding: 0px 5px 5px 5px;
+    z-index: 10;
+    opacity: 0.95;
+    font-size: 0.9em;
+    background-color: #F2F2F2;
+    border: 1px solid #000000;
+    overflow: auto;
+    display: block;
+}
+.conn .tLabel {
+    width: 100%;
+    height: 20px;
+    margin-top: 1px;
+    margin-bottom:1px;
+    float: left;
+    background-color: #8A2BE2;
+    color : #FFFFFF;
+
+}
+.conn .infotab {
+    border-spacing: 1px;
+    border: 1px dotted black;
+    border-collapse: collapse;
+}
+.conn .infotab tr, td {
+    border: 1px dotted black;
+}

@@ -109,3 +109,47 @@ exports.getDevInfo = function(res, pathname, queryStr){
         res.end();
     });
 }
+
+//获取设备联通性
+exports.getConnectivity = function(res, pathname, queryStr){
+    var data = queryStr['data'];    //接收到的JSON是字符串形式
+    console.log('reviced data from client:\n%s\n\n', data);
+    j = JSON.parse(data);  //由JSON字符串转换为JSON对象
+    //console.log(j);
+    cmd = 'cd scripts && python main.py --get-conn -d \'' + data + '\'';
+    exec(cmd, function (error, stdout, stderr) {
+        console.log('Stdout from python script:\n%s\n\n', stdout);
+        if(error){
+            console.log('Stderr from python script:\n%s\n\n', error);
+        }
+        //json = eval('(' + stdout.trim() + ')');
+        //ret = JSON.stringify(stdout.trim());
+        ret = stdout;
+        //console.log('ret: ' + ret);
+        res.writeHead(200, {'Content-Type': 'application/x-www-form-urlencoded'});
+        res.write(ret);
+        res.end();
+    });
+}
+
+//获取设备邻居
+exports.getNbrs = function(res, pathname, queryStr){
+    var data = queryStr['data'];    //接收到的JSON是字符串形式
+    console.log('reviced data from client:\n%s\n\n', data);
+    j = JSON.parse(data);  //由JSON字符串转换为JSON对象
+    //console.log(j);
+    cmd = 'cd scripts && python main.py --get-nbrs -d \'' + data + '\'';
+    exec(cmd, function (error, stdout, stderr) {
+        console.log('Stdout from python script:\n%s\n\n', stdout);
+        if(error){
+            console.log('Stderr from python script:\n%s\n\n', error);
+        }
+        //json = eval('(' + stdout.trim() + ')');
+        //ret = JSON.stringify(stdout.trim());
+        ret = stdout;
+        //console.log('ret: ' + ret);
+        res.writeHead(200, {'Content-Type': 'application/x-www-form-urlencoded'});
+        res.write(ret);
+        res.end();
+    });
+}
