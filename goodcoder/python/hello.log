@@ -1,0 +1,8 @@
+[INFO] 2015-08-20 00:24:50,633 - File "mini_logger.py" line 51, in <module> : hello world!
+[INFO] 2015-08-20 20:23:02,945 - File "mini_logger.py" line 49, in <module> 5708 139733588834048 : hello world!
+[INFO] 2015-08-20 20:23:41,853 - File "mini_logger.py" line 49, in <module> MainProcess MainThread : hello world!
+[INFO] 2015Aug20-20:31:38 - File "mini_logger.py" line 50, in <module> MainProcess MainThread : hello world!
+[INFO] 2015 Aug 20 20:32:07 - File "mini_logger.py" line 50, in <module> MainProcess MainThread : hello world!
+[INFO] 2015-08-20 20:33:23 - File "mini_logger.py" line 50, in <module> MainProcess MainThread : hello world!
+[INFO][__main__] 2015-08-20 20:34:18 - File "mini_logger.py" line 50, in <module> MainProcess MainThread : hello world!
+[INFO][__main__]2015-08-20 20:34:57 - "mini_logger.py" line 50, in <module> MainProcess MainThread : hello world!

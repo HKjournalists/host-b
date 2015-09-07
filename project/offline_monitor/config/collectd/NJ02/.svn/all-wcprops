@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/config/collectd/NJ02
+END
+version
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/config/collectd/NJ02/version
+END
+collectd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/config/collectd/NJ02/collectd.conf
+END

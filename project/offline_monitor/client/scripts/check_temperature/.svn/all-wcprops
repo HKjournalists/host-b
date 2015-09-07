@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/client/scripts/check_temperature
+END
+check_temperature.sh
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/sys/ip/!svn/ver/19619/trunk/minions/stuart/tools/monitor/client/scripts/check_temperature/check_temperature.sh
+END
+fix_temperature.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/client/scripts/check_temperature/fix_temperature.tcl
+END

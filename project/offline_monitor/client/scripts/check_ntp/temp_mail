@@ -1,0 +1,7 @@
+IDC:			BB
+Date:		2015-08-19 21:13:27
+Alert Type:	check_ntp
+Alert Info:	Switch ntp sync error!
+Switch Info:
+----------------
+192.168.30.25

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/client/scripts/check_dhcrelay
+END
+check_dhcrelay.sh
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/scripts/check_dhcrelay/check_dhcrelay.sh
+END
+fix_dhcrelay.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/scripts/check_dhcrelay/fix_dhcrelay.tcl
+END
+check_dhcrelay.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/client/scripts/check_dhcrelay/check_dhcrelay.tcl
+END

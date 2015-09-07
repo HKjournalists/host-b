@@ -1,0 +1,33 @@
+#!/bin/sh
+
+while true
+do
+    sh check_ping_avilable.sh
+    if [[ $? == 0 ]];then
+        break;
+    fi
+done
+    
+while true
+do
+    sh check_baidu.sh
+    if [[ $? == 0 ]];then
+        break;
+    fi
+done
+
+while true
+do
+    sh check_vendor.sh
+    if [[ $? == 0 ]];then
+        break;
+    fi
+done
+
+while true
+do
+    sh check_version.sh
+    if [[ $? == 0 ]];then
+        break;
+    fi
+done

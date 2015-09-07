@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/devices
+END
+check_ping_avilable.sh
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/devices/check_ping_avilable.sh
+END
+check_vendor.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/devices/check_vendor.sh
+END
+get_tor_info.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/devices/get_tor_info.sh
+END
+check_baidu.sh
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/devices/check_baidu.sh
+END
+check_version.sh
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/devices/check_version.sh
+END
+run.sh
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/devices/run.sh
+END

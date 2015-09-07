@@ -1,0 +1,64 @@
+10
+
+dir
+20104
+https://svn.baidu.com/sys/ip/trunk/minions/stuart/tools/monitor/client/scripts
+https://svn.baidu.com/sys/ip
+
+
+
+2015-06-12T03:09:45.125009Z
+20101
+luofeng
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+87759e57-73a2-4154-98e8-9d63fdba3833
+
+check_arp
+dir
+
+check_threads_number
+dir
+
+check_monitor
+dir
+
+check_ospf
+dir
+
+check_cpu_usage
+dir
+
+check_dhcrelay
+dir
+
+common
+dir
+
+check_memory_usage
+dir
+
+check_temperature
+dir
+
+check_route
+dir
+
+check_alive
+dir
+
+check_ntp
+dir
+

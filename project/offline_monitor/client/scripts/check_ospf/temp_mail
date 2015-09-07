@@ -1,0 +1,7 @@
+IDC:			BB
+Date:		2015-09-05 07:18:47
+Alert Type:	check_ospf
+Alert Info:	Switch OSPF All DOWN!
+Switch Info:
+----------------
+192.168.30.25 LY2R 1.0.8.5

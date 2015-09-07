@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/client/scripts/check_ntp
+END
+check_ntp.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/client/scripts/check_ntp/check_ntp.tcl
+END
+fix_ntp.sh
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/scripts/check_ntp/fix_ntp.sh
+END
+check_ntp.sh
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/client/scripts/check_ntp/check_ntp.sh
+END
+fix_ntp.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/client/scripts/check_ntp/fix_ntp.tcl
+END

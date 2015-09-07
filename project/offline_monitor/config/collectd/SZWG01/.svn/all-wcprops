@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/config/collectd/SZWG01
+END
+version
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/config/collectd/SZWG01/version
+END
+collectd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/config/collectd/SZWG01/collectd.conf
+END

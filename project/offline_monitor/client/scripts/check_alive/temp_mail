@@ -1,0 +1,7 @@
+IDC:			BB
+Date:		2015-09-02 11:33:31
+Alert Type:	check_alive
+Alert Info:	Switch alive check error,fix it now!
+Switch Info:
+----------------
+192.168.30.25  LY2R 1.0.8.5

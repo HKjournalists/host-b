@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/config/collectd/NMG01
+END
+version
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/sys/ip/!svn/ver/20101/trunk/minions/stuart/tools/monitor/config/collectd/NMG01/version
+END
+collectd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/sys/ip/!svn/ver/19597/trunk/minions/stuart/tools/monitor/config/collectd/NMG01/collectd.conf
+END

@@ -1,0 +1,275 @@
+#!/usr/bin/env expect
+
+set ip [lindex $argv 0]
+set timeout 400
+
+spawn telnet $ip
+send "\r"
+
+while 1 {
+    expect {
+        "login:" {
+            send "luofeng\r"
+            #send "admin\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "Password:" {
+            send "NSIluofeng@02\r"
+            #send "admin\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "show arp  | no-more\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "show route forward-host ipv4 all | no-more\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "show ethernet-switching table | no-more\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "start shell sh\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "password:" {
+            send "toor\r"
+                break
+        }
+    }
+}
+
+while 1 {
+        expect {
+                "\\$" {
+                        send "su\r"
+                                break
+                }
+        }
+}
+
+while 1 {
+        expect {
+                "Password:" {
+                        send "toor\r"
+                                break
+                }
+        }
+}
+
+while 1 {
+    expect {
+        "\\#" {
+            send "ls /proc/`ps w |grep pica_lcmgr |grep -v grep |awk '{print \$1}'`/task -al |wc -l \r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "\\#" {
+            send "exit\r\r\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "\\$" {
+            send "exit\r\r\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "start shell diag\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "password:" {
+            send "toor\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "debug -err\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "l3 egress show\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "d chg l3_entry_only\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "debug +err\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        "BCM.0>" {
+            send "exit\r\r\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "\r"
+                break
+        }
+    }
+}
+
+while 1 {
+    expect {
+        ">" {
+            send "exit\r"
+                break
+        }
+    }
+}
+
+expect eof
+catch close
+catch wait
+
