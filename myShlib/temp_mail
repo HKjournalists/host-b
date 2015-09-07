@@ -1,0 +1,7 @@
+IDC:			BB
+Date:		2015-07-01 08:01:08
+Alert Type:	test_mail
+Alert Info:	Found leap second intserting in swich!
+Switch Info:
+----------------
+192.168.30.25 LY2R 1.0.7.2

@@ -1,0 +1,28 @@
+spawn telnet 192.168.30.25
+
+Trying 192.168.30.25...
+Connected to 192.168.30.25.
+Escape character is '^]'.
+
+Waiting for synchronizing configuration.
+Synchronize configuration OK.
+Baidu Switch OS
+Welcome to XorPlus on XorPlus
+XorPlus> XorPlus> show system  boot-messages | match "Clock"
+clocksource: timebase mult[3555555] shift[22] registered
+clockevent: decrementer mult[13333333] shift[32] cpu[0]
+clockevent: decrementer mult[13333333] shift[32] cpu[1]
+Switching to clocksource timebase
+rtc-ds1307 0-0068: setting system clock to 2015-07-01 00:22:59 UTC (1435710179)
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+Clock: inserting leap second 23:59:60 UTC
+XorPlus> XorPlus> exit
+Connection closed by foreign host.
