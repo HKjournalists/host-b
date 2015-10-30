@@ -1,0 +1,18 @@
+[breaks]
+#断点编号 = 断点位置（函数）
+1 = SioLinkManager::recv_event
+2 = IoIpComm::recv_packet
+
+[vars]
+#断点编号 =  断点变量名 变量类型 辅助信息 包方向 协议 模块（多个变量用“|”分隔）
+#变量类型 - 辅助信息
+#0: const uint8_t*，长度在断点函数的参数中储存 - 表示长度的参数
+#1: vector<unsigned char>，长度通过其自带属性_M_finish和_M_start相减得出 - 无
+#2: class/struct* 中的vector - vector成员名
+#3: class/struct 中的IP（整数形式） - 成员变量名
+#4: class/struct 中的IP（IPvX形式） - 成员变量名
+#
+1 = payload 1 None rx l2 sif
+2 = payload 1 None rx l4 fea | 
+    src_address 4 _addr None None None | 
+    dst_address 4 _addr None None None
