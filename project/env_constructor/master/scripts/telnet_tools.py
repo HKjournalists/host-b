@@ -332,14 +332,14 @@ class TelnetXorplus(object):
             if ret != 0:
                 return ret
             tel = self.telobj
-            tel.write('run start shell sh\n')
+            tel.write(r'run start shell sh\n')
             ret = tel.expect(['Input password:'], timeout)
             #print ret[2]
             if ret[0] == -1:
                 self.close()
                 return -6
             tel.write('toor\n')
-            ret = tel.expect(['$'], timeout)
+            ret = tel.expect([r'\$'], timeout)
             if ret[0] == -1:
                 self.close()
                 return -6
@@ -351,7 +351,7 @@ class TelnetXorplus(object):
                 return -6
             #print ret[2]
             tel.write('toor\n')
-            ret = tel.expect(['#'], timeout)
+            ret = tel.expect([r'#'], timeout)
             if ret[0] == -1:
                 self.close()
                 return -6
@@ -360,14 +360,18 @@ class TelnetXorplus(object):
                 if cmd.rfind('\n') != -1:
                     return -5
                 tel.write((cmd + '\n').encode('ascii'))
-                time.sleep(10)
+                ret = tel.expect([r'#'], timeout)
+                if ret[0] == -1:
+                    self.close()
+                    return -6
+                #time.sleep(5)
             #msg = tel.read_very_eager()
             #print msg
             self.close()
             return 0
         except EOFError as eof:
-            print eof
-            self.close()
+            #print eof
+            #self.close()
             return -4
 
     def update_system(self, tftphost, file):

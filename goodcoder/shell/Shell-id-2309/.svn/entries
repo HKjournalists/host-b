@@ -1,15 +1,15 @@
 10
 
 dir
-4832
+8779
 https://svn.baidu.com/goodcoder/trunk/wangbin19/Shell-id-2309
 https://svn.baidu.com/goodcoder
 
 
 
-2015-07-17T07:27:41.386852Z
-4827
-goodcoder
+2015-10-22T04:37:03.334603Z
+8779
+wangbin19
 
 
 
@@ -28,80 +28,4 @@ goodcoder
 
 mini_tester
 dir
-
-
-
-add
-
-mini_tester_unit_test.sh
-file
-0
-
-
-
-
-
-
-
-
-has-props
-has-prop-mods
-
-
-
-
-
-
-
-
-
-deleted
-
-tester.conf
-file
-0
-
-
-
-
-
-
-
-
-has-props
-has-prop-mods
-
-
-
-
-
-
-
-
-
-deleted
-
-mini_tester.sh
-file
-0
-
-
-
-
-
-
-
-
-has-props
-has-prop-mods
-
-
-
-
-
-
-
-
-
-deleted
 

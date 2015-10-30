@@ -1,7 +1,7 @@
 #!/bin/bash
 scriptdir=$(cd `dirname $0`; pwd)
 scriptname=`basename $0`
-set -e
+#set -e
 
 function errorexit()
 {

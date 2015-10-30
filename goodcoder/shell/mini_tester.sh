@@ -1,12 +1,13 @@
 #!/bin/bash
 ##! @TODO:   简易测试框架
 ##! @AUTHOR: wangbin19@baidu.com
-##! @VERSION: 1.0_build0001
+##! @VERSION: 1.0_build0010
 ##! @FILEIN: ./tester.conf
 ##! @FILEOUT: ./mini_tester_result.log
 
 #全局变量
 set -m
+set -o pipefail
 SCRIPT_VERSION="1.0_build0010"
 BASE_PATH=$(cd `dirname $0`; pwd)
 #MT_FINAL_LOG="${BASE_PATH}/${LOG_RESULT_PATH}"
@@ -28,19 +29,25 @@ function mini_tester_usage()
 
 ##! @TODO: 初始化函数，包括读取配置文件、下载项目文件、配置环境、开始测试工作
 ##! @AUTHOR: wangbin19@baidu.com
-##! @IN: $1: 配置文件路径
+##! @IN: $1: 配置文件名
 ##! @OUT: 0 => success
 ##! @OUT: 1 => 后续函数执行失败
 ##! @OUT: 2 => 找不到配置文件
 ##! @OUT: 3 => 全局变量初始化失败
 function mini_tester_start()
 {
-    if [[ ! -f $1 ]]
+    local cfg=$1
+    if [[ ! -f ${cfg} ]]
     then
-        echo "can't find config file" >&2
-        return 2
+        cfg="${BASE_PATH}/../conf/${1##*./}"
+        if [[ ! -f ${cfg} ]]
+        then
+            echo "can't find config file" >&2
+            return 2
+        fi
     fi
-    source "${BASE_PATH}/${1##*./}"
+    #source "${BASE_PATH}/${1##*./}"
+    source ${cfg}
     #参数检查
     declare -a cfg_arr
     cfg_arr=(MUT_PATH QUERY_LIST_PATH QUERY_LIST_NAME QUERY_LIST_MD5 \
@@ -143,6 +150,7 @@ function mini_tester_run()
 {
     #逐行读取数据文件，过滤非法数据
     local data_file="$1/data/name_id_value_dict"
+    echo ${data_file}
     if [[ ! -f ${data_file} ]]
     then
         echo "can't find name_id_value_dict" >&2
@@ -303,18 +311,18 @@ function mini_tester_do_test()
     fi
     if [[ ! -d $2 ]]
     then
-        echo "$1 is not a directory"
+        echo "$2 is not a directory"
         return 1
     fi
     if [[ -z $3 ]]
     then
-        echo "$2 not exists"
+        echo "$3 not exists"
         return 1
     fi
     rm -rf ${RESPONSE_PATH}
     if [[ $? -ne 0 ]]
     then
-        return 2
+        return 1
     fi
     touch ${RESPONSE_PATH}
     local url_base="http://127.0.0.1"

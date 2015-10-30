@@ -1,15 +1,14 @@
 #!/bin/bash
 ##! @TODO:   简易测试框架
 ##! @AUTHOR: wangbin19@baidu.com
-##! @VERSION: 1.0_build0001
-##! @FILEIN: ./tester.conf
+##! @VERSION: 1.0_build20
+##! @FILEIN: ../conf/mini_tester.conf
 ##! @FILEOUT: ./mini_tester_result.log
 
-#全局变量
 set -m
-SCRIPT_VERSION="1.0_build0010"
+set -o pipefail
+SCRIPT_VERSION="1.0_build20"
 BASE_PATH=$(cd `dirname $0`; pwd)
-#MT_FINAL_LOG="${BASE_PATH}/${LOG_RESULT_PATH}"
 PROGRAM_NAME="mini_http_server"  #待测项目主程序名
 PROGRAM_PORT="65001" #待测项目端口
 
@@ -45,7 +44,6 @@ function mini_tester_start()
             return 2
         fi
     fi
-    #source "${BASE_PATH}/${1##*./}"
     source ${cfg}
     #参数检查
     declare -a cfg_arr
@@ -54,9 +52,7 @@ function mini_tester_start()
     local i
     for i in ${cfg_arr[*]}
     do 
-        #echo -n "${i}="
         i=`eval echo $\`echo "${i}"\``
-        #echo "${i}"
         if [[ "${i}" == "" ]]
         then 
             echo "can't init global variable ${i}, please check the config file"
@@ -156,20 +152,12 @@ function mini_tester_run()
         return 2
     fi
     local log_path="$1/log/server.log"
-    #if [[ ! -f ${log_path} ]]
-    #then
-    #    echo "can't find server.log" >&2
-    #    return 2
-    #fi
-    #local data_file_bak="${data_file}.bak"
     local port=${PROGRAM_PORT}   #寻找可用端口
     declare -a rets
     while [[ ${port} -le 65535 ]]   
     do
         netstat -nta | grep -q ${port}
-        rets=(${PIPESTATUS[*]})
-        #echo "${rets[*]}"
-        if [[ ${rets[0]} -eq 0 && ${rets[1]} -eq 1 ]]
+        if [[ $? -ne 0 ]]
         then
             echo "find an available port: ${port}"
             break
@@ -264,7 +252,7 @@ function mini_tester_exec()
     fi
     echo "program is running"
     cd ${BASE_PATH}
-    return 0
+    return $?
 }
 
 ##! @TODO: 清理进程
@@ -273,8 +261,6 @@ function mini_tester_exec()
 ##! @OUT: 0 => success; 1 => failed
 function mini_tester_clean()
 {
-    #pgrep -f $1 | xargs -I {} kill -2 {}
-    #if [[ ${PIPESTATUS[0]} -ne 0 || ${PIPESTATUS[1]} -ne 0 ]]
     kill -2 `pgrep -f "$1"`
     if [[ $? -ne 0 ]]
     then
@@ -456,6 +442,7 @@ if [[ ${0##*/} == "mini_tester.sh" ]]
 then
     #NOT invoked by source
     mini_tester_main $*
+    exit $?
 fi
 
 
