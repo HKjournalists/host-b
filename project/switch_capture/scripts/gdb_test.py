@@ -58,6 +58,17 @@ class MyProcess(multiprocessing.Process):
             return a + b
         finally:
             print 'before return'
+    
+    def re_test(self):
+        p = re.compile(r'.*Breakpoint (\d+),', re.S)
+        str = """Continuing.
+
+Breakpoint 2, XrlLcmgrTarget::lcmgr_0_1_send_packet_from_cpu (
+    this=0xbf8ad9d4, packet_data=@0x4b6305c8) at xrl_lcmgr_target.cc:2548
+warning: Source file is more recent than executable.
+2548        if (lcmgr_dbg_flags) {"""
+        print p.match(str).groups()
+        
 
 if __name__ == '__main__':
     '''
@@ -107,4 +118,4 @@ if __name__ == '__main__':
 
     '''
     mp = MyProcess()
-    print mp.test()
+    mp.re_test()

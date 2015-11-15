@@ -521,6 +521,8 @@ if __name__ == '__main__':
         if index == 0:
             print sh.before.replace('\x00', '').strip()
             print sh.after.replace('\x00', '').strip()
+        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 5)
+        #print index
         while True:
             index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 5)
             #print index

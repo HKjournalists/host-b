@@ -1,0 +1,14 @@
+[breaks]
+#断点编号 = 断点位置（函数）
+1 = XrlIO<IPv4>::recv
+2 = XrlIO<IPv4>::send
+
+[vars]
+#断点编号 =  变量名 处理函数 附加信息（多个变量用“|”分隔）
+#
+1 = payload pxvec_ospf rx-ospf |
+    src pip None | 
+    dst pip None 
+2 = data parr_ospf tx-ospf |
+    src pip None | 
+    dst pip None 

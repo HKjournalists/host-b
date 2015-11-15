@@ -307,8 +307,10 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
             self.logger.error('gen_gs failed')
             return
 
+        #桩，只构建环境不进行自动调试，手动调试时使用
         #self.queue.put({'event': 'exit', 'pid': self.ident})
         #return 0
+
         self.start_gdb(ret)
         self.logger.debug('thread end')
         
@@ -397,7 +399,6 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
             return -1
         self.filter = filter
         parser = ConfigParser.ConfigParser()
-        self.logger.debug('load gdb config file success')
         try:
             parser.read(self.gdb_cfg_path)
             for k, v in parser.items('breaks'):
@@ -407,6 +408,7 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
         except ConfigParser.NoSectionError, e:
             self.logger.error(e)
             return -1
+        self.logger.debug('load gdb config file success')
         with open(self.loc_gs_path, 'w+') as fp:
             #交换机源文件目录写入gdb脚本
             fp.write('directory %s\n' % (self.sw_src_dir)) 
@@ -417,7 +419,6 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
             for bp in self.breaks:
                 fp.write('b %s\n' % (bp))
         try:
-            #con = self.get_sh_con()
             self.con.start_sh()
             rm_paths.append(os.path.join(self.sw_pg_dir, os.path.split(self.loc_gs_path)[1]))
             self.con.file_scp('%s:%s' % (self.loc_ip, self.loc_gs_path), self.sw_pg_dir, 
@@ -454,15 +455,13 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
             sh = self.con.start_sh()
             self.con.single_cmd('cd %s' % (self.sw_pg_dir), [r'#'])    #进入模块目录
             pid = self.con.send_echo('pgrep %s' % (sw_pg_name), r'#')[0]    #获取pid
-            #ret = self.con.send_echo('gdb attach %s' % (pid), prompt)       #进入gdb
-            #print ret[0]
             cmd = 'gdb attach %s' % (pid)
-            sh.sendline(cmd)
+            sh.sendline(cmd)                                                #进入gdb
             index = sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT])
             if index == 0:
                 print sh.before.replace('\x00', '').strip()   #读取到的字符中含有\x00，why?
                 print sh.after.replace('\x00', '').strip()
-            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
+            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 5)
             if index == 0:
                 print sh.before.replace('\x00', '').strip()
                 print sh.after.replace('\x00', '').strip()
@@ -470,43 +469,43 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
             #print self.con.expsh.before.replace('\x00', '').strip()
             #if ret == 0:
             #    ret = self.con.send_echo('y', prompt)
-
             cmd = 'source %s' % (sw_gs_path)
             sh.sendline(cmd)
-            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
+            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 5)
             if index == 0:
                 print sh.before.replace('\x00', '').strip()
                 print sh.after.replace('\x00', '').strip()
             while not self.ev.is_set():
-                #ret = self.con.send_echo2('c', r'Breakpoint \d+,', prompt)  #断点编号
                 bidx = None
-                sh.sendline('c')
-                index =sh.expect(['c', pexpect.EOF, pexpect.TIMEOUT])
+                sh.sendline('continue')
+                index =sh.expect(['continue', pexpect.EOF, pexpect.TIMEOUT])
                 if index == 0:
                     print sh.before.replace('\x00', '').strip()
                     print sh.after.replace('\x00', '').strip()
-                index = sh.expect(['Breakpoint (\d+),', pexpect.EOF, pexpect.TIMEOUT])
+                index = sh.expect(['Breakpoint (\d+),', pexpect.EOF, pexpect.TIMEOUT], 60)
                 if index == 0:
-                    print sh.before.replace('\x00', '').strip()
-                    print sh.after.replace('\x00', '').strip()
+                    before = sh.before.replace('\x00', '').strip()
+                    after = sh.after.replace('\x00', '').strip()
+                    print('####BREAK\n%s\n@@@@\n%s\n####' % (before, after))
                     bidx = int(sh.match.group(1))
-                index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 5)
+                index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1) ##########
                 if index == 0:
-                    print sh.before.replace('\x00', '').strip() 
-                    print sh.after.replace('\x00', '').strip()
-                #while True: 
-                #    index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 3)
-                #    if index == 0:
-                #        before = sh.before.replace('\x00', '').strip()
-                #        after = sh.after.replace('\x00', '').strip()
-                #        break
-                #    if index == 1:
-                #        break
-                #    print 'timeout skip break point'
-                #    sh.sendline('c')
-                #    sh.expect(['Breakpoint (\d+),', pexpect.EOF, pexpect.TIMEOUT])
-                #    bidx = int(sh.match.group(1))
-
+                    before = sh.before.replace('\x00', '').strip()
+                    after = sh.after.replace('\x00', '').strip()
+                    print('####PROMPT\n%s\n@@@@\n%s\n####' % (before, after))
+                '''
+                while True: 
+                    index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 30)
+                    if index == 0:
+                        before = sh.before.replace('\x00', '').strip()
+                        after = sh.after.replace('\x00', '').strip()
+                        print('####CONTINUE\n%s\n@@@@\n%s\n####' % (before, after))
+                        p_b = re.compile(r'.*Breakpoint (\d+),', re.S)
+                        bidx = int(p_b.match(before).group(1))
+                        break
+                    if index == 1:
+                        break
+                '''
                 msg = 'Breakpoint %d' % (bidx)
                 vars = self.vars[bidx - 1].split('|')
                 p_pt = re.compile(r'.*\(.*(?:(\b\w+) [\*&])\) @?(0x\w+)')
@@ -521,212 +520,192 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
                     ret = None
                     #print(name, type, extra, direct, proto, mod)
                     if type == 0:     #const uint8_t*
-                        #ret = self.con.send_echo('p %s' % (name), prompt)  #输出变量类型
-                        #saddr = re.match(r'.*(0x\w+)', ret[0]).group(1)    #获取地址
-                        #ret = self.con.send_echo('p %s' % (extra), prompt)    #p长度变量
-                        #l = int(re.match(r'\$\d+ = (\d+)', ret[0]).group(1))  #获取长度
-                        #ret = self.con.send_echo('x/%dxb %s' % (l, saddr), prompt)\
-                        #                        [0].replace('\r', '')
-                        sh.sendline('p %s' % (name))
+                        sh.sendline('p %s\r' % (name))
+                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT], 1)
                         index = sh.expect([r'\(.*\) (0x\w+) "', pexpect.EOF, pexpect.TIMEOUT])
                         saddr = sh.match.group(1)
                         index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
-                        sh.sendline('p %s' % (extra))
-                        index = sh.expect(['p %s' % (extra), pexpect.EOF, pexpect.TIMEOUT])
+                        sh.sendline('p %s\r' % (extra))
+                        index = sh.expect(['p %s' % (extra), pexpect.EOF, pexpect.TIMEOUT], 1)
                         index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
                         if index == 0:
                             before = sh.before.replace('\x00', '').strip()
                             after = sh.after.replace('\x00', '').strip()
-                            print('%s\n%s' % (before, after))
+                            print('####PRINT0.1\n%s\n@@@@\n%s\n####' % (before, after)) 
                             ret = before.replace('\r', '')
                         l = int(re.match(r'\$\d+ = (\d+)', ret).group(1))
                         cmd = 'x/%dxb %s' % (l, saddr)
                         sh.sendline(cmd)
-                        index = sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT])
+                        index = sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT], 1)
                         if index == 0:
-                            print sh.before.replace('\x00', '').strip()
-                            print sh.after.replace('\x00', '').strip()
+                            before = sh.before.replace('\x00', '').strip()   
+                            after = sh.after.replace('\x00', '').strip()
+                            print('####PRINT0.2\n%s\n@@@@\n%s\n####' % (before, after)) 
                         while True:
-                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 3)
+                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
                             if index == 0:
                                 before = sh.before.replace('\x00', '').strip()
                                 after = sh.after.replace('\x00', '').strip()
-                                print('%s\n%s' % (before, after))
+                                print('####PRINT0.3\n%s\n@@@@\n%s\n####' % (before, after)) 
                                 ret = before.replace('\r', '')
                                 break
                             if index == 1:
                                 break
                             sh.sendline(cmd)
-                            sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT])
+                            sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT], 1)
                     elif type == 1:   #vector
-                        #self.con.single_cmd('p %s' % (name), None, None)
-                        #ret = self.con.exp_echo(r'%s = 0x\w+ "' % ('_M_start')) 
-                        #saddr = re.match(r'%s = (0x\w+)' % ('_M_start'), ret).group(1)  #起始地址
-                        #ret = self.con.exp_echo(r'%s = 0x\w+ "' % ('_M_finish'))
-                        #eaddr = re.match(r'%s = (0x\w+)' % ('_M_finish'), ret).group(1) #末尾地址
-                        #self.con.exp_echo(prompt)
-                        #l = int(eaddr, 16) - int(saddr, 16)   #vector数据部分长度
-                        #ret = self.con.send_echo('x/%dxb %s' % (l, saddr), prompt)\
-                        #                        [0].replace('\r', '')
-                        #print('data: %s' % (ret))
-                        sh.sendline('p %s' % (name))
+                        sh.sendline('p %s\r' % (name))
+                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT], 1)
                         index = sh.expect([r'_M_start = (0x\w+) "', pexpect.EOF, pexpect.TIMEOUT])
                         saddr = sh.match.group(1)
                         index = sh.expect([r'_M_finish = (0x\w+) "', pexpect.EOF, pexpect.TIMEOUT])
                         eaddr = sh.match.group(1)
-                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
+                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
                         l = int(eaddr, 16) - int(saddr, 16) 
                         cmd = 'x/%dxb %s' % (l, saddr)
                         sh.sendline(cmd)
-                        index = sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT])
+                        index = sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT], 1)
                         if index == 0:
-                            print sh.before.replace('\x00', '').strip()
-                            print sh.after.replace('\x00', '').strip()
+                            before = sh.before.replace('\x00', '').strip()
+                            after = sh.after.replace('\x00', '').strip()
+                            print('####PRINT1.1\n%s\n@@@@\n%s\n####' % (before, after))
                         while True:
-                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 3)
+                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
                             if index == 0:
                                 before = sh.before.replace('\x00', '').strip()
                                 after = sh.after.replace('\x00', '').strip()
-                                print('%s\n%s' % (before, after))
+                                print('####PRINT1.2\n%s\n@@@@\n%s\n####' % (before, after))
                                 ret = before.replace('\r', '')
                                 break
                             if index == 1:
                                 break
                             sh.sendline(cmd)
-                            sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT])
+                            sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT], 1)
                     elif type == 2:   #class/struct
-                        #ret = self.con.send_echo('p %s' % (name), prompt)
-                        #获取对象的类型和地址
-                        #(cls, addr) = p_pt.match(ret[0]).groups()   
-                        #用获取到的类型打印
-                        #self.con.single_cmd('p {%s} %s' % (cls, addr), [extra], None) 
-                        #ret = self.con.exp_echo(r'%s = 0x\w+ "' % ('_M_start'))
-                        #saddr = re.match(r'%s = (0x\w+)' % ('_M_start'), ret).group(1)
-                        #ret = self.con.exp_echo(r'%s = 0x\w+ "' % ('_M_finish'))
-                        #eaddr = re.match(r'%s = (0x\w+)' % ('_M_finish'), ret).group(1)
-                        #self.con.exp_echo(prompt)
-                        #l = int(eaddr, 16) - int(saddr, 16)
-                        #ret = self.con.send_echo('x/%dxb %s' % (l, saddr), prompt)\
-                        #                        [0].replace('\r', '')
-                        sh.sendline('p %s' % (name))
-                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT])
+                        sh.sendline('p %s\r' % (name))
+                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT], 1)
                         if index == 0:
                             print sh.after.replace('\x00', '').strip()
                         index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
                         if index == 0:
                             before = sh.before.replace('\x00', '').strip()   
                             after = sh.after.replace('\x00', '').strip()
-                            print('%s\n%s' % (before, after))   
+                            print('####PRINT2.1\n%s\n@@@@\n%s\n####' % (before, after))  
                             ret = before
                         (cls, addr) = p_pt.match(ret).groups()
-                        sh.sendline('p {%s} %s' % (cls, addr))
+                        sh.sendline('p {%s} %s\r' % (cls, addr))
+                        sh.expect(['p {%s} %s' % (cls, addr), pexpect.EOF, pexpect.TIMEOUT], 1)
                         index = sh.expect([extra, pexpect.EOF, pexpect.TIMEOUT])
                         index = sh.expect([r'_M_start = (0x\w+) "', pexpect.EOF, pexpect.TIMEOUT])
                         saddr = sh.match.group(1)
                         index = sh.expect([r'_M_finish = (0x\w+) "', pexpect.EOF, pexpect.TIMEOUT])
                         eaddr = sh.match.group(1)
-                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
+                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
                         l = int(eaddr, 16) - int(saddr, 16) 
                         cmd = 'x/%dxb %s' % (l, saddr)
                         sh.sendline(cmd)
-                        index = sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT])
+                        index = sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT], 1)
                         if index == 0:
-                            print sh.before.replace('\x00', '').strip()
-                            print sh.after.replace('\x00', '').strip()
+                            before = sh.before.replace('\x00', '').strip()
+                            after = sh.after.replace('\x00', '').strip()
+                            print('####PRINT2.2\n%s\n@@@@\n%s\n####' % (before, after))
                         while True:
-                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 3)
+                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
                             if index == 0:
                                 before = sh.before.replace('\x00', '').strip()
                                 after = sh.after.replace('\x00', '').strip()
-                                print('%s\n%s' % (before, after))
+                                print('####PRINT2.3\n%s\n@@@@\n%s\n####' % (before, after))
                                 ret = before.replace('\r', '')
                                 break
                             if index == 1:
                                 break
                             sh.sendline(cmd)
-                            sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT])
+                            sh.expect([cmd, pexpect.EOF, pexpect.TIMEOUT], 1)
                     elif type == 3:
-                        #ret = self.con.send_echo('p %s' % (name), prompt)
-                        #(cls, addr) = p_pt.match(ret[0]).groups()
-                        #self.con.single_cmd('p {%s} %s' % (cls, addr), [extra], None) 
-                        #ret = self.con.exp_echo(r'%s = \w+\}' % ('_addr'))
-                        #ret = int(re.match(r'%s = (\w+)\}' % ('_addr'), ret).group(1))
-                        #ret = socket.inet_ntoa(struct.pack('I',socket.htonl(ret)))
-                        #self.con.exp_echo(prompt)
-                        sh.sendline('p %s' % (name))
-                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT])
+                        sh.sendline('p %s\r' % (name))
+                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT], 1)
                         if index == 0:
-                            print sh.after.replace('\x00', '').strip()
+                            after = sh.after.replace('\x00', '').strip()
+                            print('####PRINT3.1\n%s\n####' % (after))
                         while True:
-                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 3)
+                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
                             if index == 0:
                                 before = sh.before.replace('\x00', '').strip()
                                 after = sh.after.replace('\x00', '').strip()
-                                print('%s\n%s' % (before, after))
+                                print('####PRINT3.2\n%s\n@@@@\n%s\n####' % (before, after))
                                 ret = before.replace('\r', '')
                                 break
                             if index == 1:
                                 break
-                            sh.sendline('p %s' % (name))
-                            sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT])
-                        #index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 3)
-                        #print index
-                        #if index == 0:
-                        #    before = sh.before.replace('\x00', '').strip()   
-                        #    after = sh.after.replace('\x00', '').strip()
-                        #    print('%s\n%s' % (before, after))   
-                        #    ret = before
+                            sh.sendline('p %s\r' % (name))
+                            sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT], 1)
                         (cls, addr) = p_pt.match(ret).groups()
-                        sh.sendline('p {%s} %s' % (cls, addr))
-                        #sh.expect(['p {%s} %s' % (cls, addr), pexpect.EOF, pexpect.TIMEOUT])
-                        while sh.expect([r'%s = (\w+)\}' % (extra), pexpect.EOF, 
-                                         pexpect.TIMEOUT], 3) == 2:
-                            sh.sendline('p {%s} %s' % (cls, addr))
-                            #sh.expect(['p {%s} %s' % (cls, addr), pexpect.EOF, pexpect.TIMEOUT])
-                        ip = int(sh.match.group(1))
-                        ret = socket.inet_ntoa(struct.pack('I',socket.htonl(ip)))
-                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
-                    elif type == 4:
-                        #ret = self.con.send_echo('p %s' % (name), prompt)
-                        #print ret[0]
-                        #self.con.single_cmd('p {%s} %s' % (cls, addr), [extra], None) 
-                        #ret = self.con.exp_echo(r'%s = \{\w+\,' % (extra))
-                        #ret = int(re.match(r'%s = \{(\w+)\,' % (extra), ret).group(1))
-                        #ret = socket.inet_ntoa(struct.pack('I',socket.htonl(ret)))
-                        #self.con.exp_echo(prompt)
-                        sh.sendline('p %s' % (name))
-                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT])
+                        sh.sendline('p {%s} %s\r' % (cls, addr))
+                        index = sh.expect(['p {%s} %s' % (cls, addr), 
+                                          pexpect.EOF, pexpect.TIMEOUT], 1)
                         if index == 0:
-                            print sh.after.replace('\x00', '').strip()
-                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
-                        if index == 0:
-                            before = sh.before.replace('\x00', '').strip()   
+                            before = sh.before.replace('\x00', '').strip()
                             after = sh.after.replace('\x00', '').strip()
-                            print('%s\n%s' % (before, after))   
-                            ret = before
-                        (cls, addr) = p_pt.match(ret).groups()
-                        sh.sendline('p {%s} %s' % (cls, addr))
-                        #index = sh.expect([r'%s = \{(\w+)\,' % (extra), pexpect.EOF, 
-                        #                  pexpect.TIMEOUT]) 
-                        while sh.expect([r'%s = \{(\w+)\,' % (extra), pexpect.EOF, 
-                                         pexpect.TIMEOUT], 3) == 2:
-                            sh.sendline('p {%s} %s' % (cls, addr))
+                            print('####PRINT3.3\n%s\n@@@@\n%s\n####' % (before, after))
+                        while sh.expect([r'%s = (\w+)\}' % (extra), pexpect.EOF, 
+                                        pexpect.TIMEOUT], 2) == 2:
+                            sh.sendline('p {%s} %s\r' % (cls, addr))
+                            sh.expect(['p {%s} %s' % (cls, addr), pexpect.EOF, pexpect.TIMEOUT], 1)
                         ip = int(sh.match.group(1))
                         ret = socket.inet_ntoa(struct.pack('I',socket.htonl(ip)))
-                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT])
+                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
+                    elif type == 4:
+                        sh.sendline('p %s\r' % (name))
+                        index = sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT], 1)
+                        if index == 0:
+                            after = sh.after.replace('\x00', '').strip()
+                            print('####PRINT4.1\n%s\n####' % (after))
+                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
+                        while True:
+                            index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
+                            if index == 0:
+                                before = sh.before.replace('\x00', '').strip()
+                                after = sh.after.replace('\x00', '').strip()
+                                print('####PRINT4.2\n%s\n@@@@\n%s\n####' % (before, after))
+                                ret = before.replace('\r', '')
+                                break
+                            if index == 1:
+                                break
+                            sh.sendline('p %s\r' % (name))
+                            sh.expect(['p %s' % (name), pexpect.EOF, pexpect.TIMEOUT], 1)
+                        (cls, addr) = p_pt.match(ret).groups()
+                        sh.sendline('p {%s} %s\r' % (cls, addr))
+                        index = sh.expect(['p {%s} %s' % (cls, addr), 
+                                          pexpect.EOF, pexpect.TIMEOUT], 1)
+                        if index == 0:
+                            before = sh.before.replace('\x00', '').strip()
+                            after = sh.after.replace('\x00', '').strip()
+                            print('####PRINT4.3\n%s\n@@@@\n%s\n####' % (before, after))
+                        while sh.expect([r'%s = \{(\w+)\,' % (extra), pexpect.EOF, 
+                                         pexpect.TIMEOUT], 1) == 2:
+                            sh.sendline('p {%s} %s\r' % (cls, addr))
+                            sh.expect(['p {%s} %s' % (cls, addr), pexpect.EOF, pexpect.TIMEOUT], 1)
+                        ip = int(sh.match.group(1))
+                        ret = socket.inet_ntoa(struct.pack('I',socket.htonl(ip)))
+                        index = sh.expect([prompt, pexpect.EOF, pexpect.TIMEOUT], 1)
                     if vars.index(var) == 0:
                         if self.filter(ret, '%s_%s' % (proto, mod)):
                             log_flag = True
                             msg = '%s, %s, %s, %s\n%s\n' % (msg, direct, proto, mod, 
-                                                          ret.decode('utf-8'))
+                                                           ret.decode('utf-8'))
                         else:
                             break
                     if len(vars) > 1 and vars.index(var) > 0:
                         msg += '%s:%s ' % (name, ret)
                 if log_flag:
-                    print(msg)
-                    self.logger.info('%s' % (msg))
-                    log_flag = False 
+                    #print('######LOG######\n%s\n######LOG######' % (msg))
+                    #self.logger.info('%s' % (msg))
+                    log_flag = False
+            ret = self.con.send_echo('q', r'\(y or n\)')
+            ret = self.con.send_echo('y', r'#')  
+            self.logger.debug('exit gdb')
+            self.con.close_sh(sh)
+            self.recover(rm_paths)
         except AttributeError, e:
             self.logger.error(e) 
             traceback.print_exc(file=sys.stdout)
@@ -744,15 +723,8 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
             traceback.print_exc(file=sys.stdout)
             return -1
         finally:
-            try:
-                ret = self.con.send_echo('q', r'\(y or n\)')  #退出gdb
-                ret = self.con.send_echo('y', r'#')  
-                self.logger.debug('exit gdb')
-                self.con.close_sh(sh)
-                self.recover(rm_paths)
-            finally:
-                #self.queue.put({'event': 'exit', 'pid': os.getpid()})
-                self.queue.put({'event': 'exit', 'pid': self.ident})
+            #self.queue.put({'event': 'exit', 'pid': os.getpid()})
+            self.queue.put({'event': 'exit', 'pid': self.ident})
 
     def ospf_filter(self, buf, proto):
         if proto == 'ospf_ospf':
@@ -798,7 +770,6 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
         if rm_paths is None:
             return 0
         try:
-            #con = self.get_sh_con()
             self.con.start_sh()
             for file in rm_paths:
                 self.con.single_cmd('rm -rf %s' % (file), [r'#'])
@@ -818,23 +789,6 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
             self.logger.debug('recover files complete')
             self.con.close_sh()
 
-    def get_sh_con(self):
-        """获取交换机shell连接
-        Args:
-            None
-        Returns:
-            con: 连接对象
-            -1: 连接异常
-        """
-        try:
-            self.con.start_sh()
-            #raise pexpect_tools.PexpcError, 'Test'
-            return self.con
-        except pexpect_tools.PexpcError, e:
-            traceback.print_exc(file=sys.stdout)
-            self.logger.error(e)
-            return None
-
     def close_sh_con(self):
         """关闭交换机shell连接
         Args:
@@ -852,18 +806,6 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
                 traceback.print_exc(file=sys.stdout)
                 self.logger.error(e)
                 return -1
-        return 0
-
-    def handler(self, signum, frame):
-        """关闭交换机shell连接
-        Args:
-            None
-        Returns:
-            0: 成功
-        """
-        if self.con is not None:
-            self.con.close_sh()
-            self.con = None
         return 0
     
 class MiniLogger(object):

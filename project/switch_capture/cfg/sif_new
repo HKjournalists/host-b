@@ -1,0 +1,14 @@
+[breaks]
+#断点编号 = 断点位置（函数）
+1 = IoIpComm::recv_packet
+2 = IoIpComm::send_packet
+
+[vars]
+#断点编号 =  变量名 处理函数 附加信息（多个变量用“|”分隔）
+#
+1 = payload pxvec_fea rx-fea | 
+    src_address pipvx None | 
+    dst_address pipvx None
+2 = payload pxvec_fea tx-fea | 
+    src_address pipvx None | 
+    dst_address pipvx None

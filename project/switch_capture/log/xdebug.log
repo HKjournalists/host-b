@@ -1,215 +1,181 @@
-[DEBUG][XorplusDebugger][10-22,00:09:41]loading config files success
-[ERROR][XorplusDebugger][10-22,00:09:41]No option 'gdb_cfg_path' in section: 'sif'
-[DEBUG][XorplusDebugger][10-22,00:10:27]loading config files success
-[ERROR][XorplusDebugger][10-22,00:10:27]No option 'gdb_cfg_path' in section: 'sif'
-[DEBUG][XorplusDebugger][10-22,00:11:56]loading config files success
-[DEBUG][XorplusDebugger][10-22,00:43:49]loading config files success
-[DEBUG][XorplusDebugger][10-22,00:46:05]loading config files success
-[DEBUG][XorplusDebugger][10-22,00:51:09]loading config files success
-[DEBUG][XorplusDebugger][10-22,01:07:41]loading config files success
-[DEBUG][XorplusDebugger][10-22,01:12:06]loading config files success
-[DEBUG][XorplusDebugger][10-22,01:13:11]loading config files success
-[DEBUG][XorplusDebugger][10-22,01:13:21]loading config files success
-[DEBUG][XorplusDebugger][10-22,14:41:58]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:36:12]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:37:51]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:38:12]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:40:29]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:41:11]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:44:48]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:45:21]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:45:59]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:46:12]loading config files success
-[DEBUG][XorplusDebugger][10-22,17:48:29]loading config files success
-[DEBUG][XorplusDebugger][10-22,18:09:49]loading config files success
-[DEBUG][XorplusDebugger][10-22,18:10:20]loading config files success
-[DEBUG][XorplusDebugger][10-22,22:04:00]loading config files success
-[DEBUG][XorplusDebugger][10-22,22:05:19]loading config files success
-[DEBUG][XorplusDebugger][10-23,10:43:41]loading config files success
-[DEBUG][XorplusDebugger][10-23,18:03:38]loading config files success
-[DEBUG][XorplusDebugger][10-23,18:19:23]loading config files success
-[DEBUG][XorplusDebugger][10-23,18:20:12]loading config files success
-[DEBUG][XorplusDebugger][10-23,18:23:03]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:27:37]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:28:15]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:28:46]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:31:08]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:32:48]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:39:17]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:40:28]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:41:25]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:42:48]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:43:58]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:45:29]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:48:03]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:55:26]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:55:58]loading config files success
-[DEBUG][XorplusDebugger][10-27,11:57:09]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 12:01:28,568]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 12:05:36,169]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 12:07:57,657]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 14:46:06,981]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 14:51:07,736]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 15:20:00,960]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 15:22:54,968]loading config files success
-[DEBUG][XorplusDebugger][2015-10-27 15:27:42,139]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 15:40:43,838]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:03:56,203]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:06:20,131]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:07:51,147]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:09:55,397]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:12:31,952]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:20:47,386]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:22:46,836]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:28:00,916]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:29:37,146]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:37:20,940]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:39:14,889]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:42:00,315]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:44:08,516]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 17:45:25,861]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 18:04:56,752]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 18:09:51,475]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 18:18:45,311]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 20:51:24,149]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 21:16:08,616]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 21:24:07,730]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 21:27:11,820]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:12:30,750]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:14:52,909]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:15:29,383]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:18:54,594]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:21:09,268]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:38:04,685]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:42:58,159]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:53:23,604]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:54:51,750]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 22:58:55,680]load config files success
-[DEBUG][XorplusDebugger][2015-10-27 23:54:31,734]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 00:20:46,984]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 17:22:23,977]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 17:25:30,039]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 17:45:43,481]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 18:00:42,396]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 18:08:09,162]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 18:13:05,478]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 18:15:56,454]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 18:18:44,256]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 18:23:08,547]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:18:05,687]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:18:27,524]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:18:50,617]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:19:50,041]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:20:18,406]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:25:22,650]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:25:38,510]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:29:52,780]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:30:33,992]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:31:24,213]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:31:39,874]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:57:43,011]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:57:47,326]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 22:58:11,266]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 23:04:30,851]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 23:08:40,635]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 23:21:58,238]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 23:45:14,614]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 23:49:47,935]load config files success
-[DEBUG][XorplusDebugger][2015-10-28 23:58:40,110]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:03:12,997]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:09:54,079]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:11:21,096]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:16:05,894]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:26:30,527]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:34:06,652]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:40:26,772]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:47:51,844]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:50:36,973]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:52:26,424]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:53:10,172]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:54:51,396]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:57:38,161]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 00:59:03,562]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 01:04:04,522]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 01:09:15,306]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 01:15:14,239]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 15:22:52,407]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 15:23:14,248]load config files success
-[ERROR][XorplusDebugger][2015-10-29 15:23:23,172]No option 'sw_pg_dir' in section: 'lcmgr'
-[DEBUG][XorplusDebugger][2015-10-29 15:24:41,020]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 15:28:51,920]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 15:40:22,169]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 15:47:41,925]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:05:13,327]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:13:14,909]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:19:35,278]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:40:28,107]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:47:47,287]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:52:29,142]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:54:10,462]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:55:17,951]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 16:59:29,621]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:02:20,715]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:03:36,945]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:04:31,869]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:06:48,193]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:08:31,026]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:15:00,545]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:18:49,281]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:20:10,158]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:26:00,247]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:31:21,602]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:33:02,219]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:35:02,077]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:37:39,679]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:42:22,138]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 17:57:29,416]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 18:10:40,031]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 18:12:25,684]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 18:16:30,334]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 18:17:57,539]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 23:21:50,035]load config files success
-[DEBUG][XorplusDebugger][2015-10-29 23:22:28,154]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 01:24:08,598]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 01:26:13,330]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 01:27:05,371]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 01:28:56,895]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 01:35:24,130]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 01:41:06,632]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 01:52:15,188]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:05:46,095]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:11:32,115]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:15:12,137]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:17:17,384]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:20:09,529]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:22:36,938]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:24:44,359]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:26:01,434]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:31:11,490]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:34:53,570]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:38:34,595]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:44:15,171]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:46:11,779]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 02:47:19,012]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 11:01:00,926]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 12:11:53,713]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 13:02:56,047]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 13:04:08,671]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 13:25:48,639]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 14:22:06,820]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 14:52:39,857]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 14:59:22,796]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:03:25,797]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:11:51,639]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:20:36,601]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:25:55,756]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:28:25,039]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:30:03,050]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:38:17,359]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 15:40:46,527]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 16:00:42,261]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 16:03:24,795]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 16:11:04,999]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 16:12:06,217]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 16:12:18,812]load config files success
-[DEBUG][XorplusDebugger][2015-10-30 16:22:47,499]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:41:33,289]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:41:51,707]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:44:49,592]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:46:07,394]load config files success
+[ERROR][XorplusDebugger][2015-11-11 10:46:12,502]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 10:47:05,557]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:48:54,783]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:52:36,487]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:55:19,639]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:58:06,630]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 10:59:14,595]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 11:00:41,455]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 11:03:16,274]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 11:05:21,773]load config files success
+[ERROR][XorplusDebugger][2015-11-11 11:05:21,937]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 11:05:25,505]load config files success
+[ERROR][XorplusDebugger][2015-11-11 11:05:25,678]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 11:05:28,502]load config files success
+[ERROR][XorplusDebugger][2015-11-11 11:05:28,677]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 11:06:15,918]load config files success
+[ERROR][XorplusDebugger][2015-11-11 11:06:16,078]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 11:15:21,564]load config files success
+[ERROR][XorplusDebugger][2015-11-11 11:17:04,224]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 13:01:25,344]load config files success
+[ERROR][XorplusDebugger][2015-11-11 13:03:12,636]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 14:09:53,096]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 14:44:27,950]load config files success
+[ERROR][XorplusDebugger][2015-11-11 14:44:28,119]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 15:09:54,068]load config files success
+[ERROR][XorplusDebugger][2015-11-11 15:10:03,697]No option 'loc_pg_path' in section: 'lcmgr'
+[DEBUG][XorplusDebugger][2015-11-11 15:10:22,854]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 15:19:19,978]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 15:29:21,944]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 16:37:48,709]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 16:47:22,208]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 16:53:29,773]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 17:00:53,552]load config files success
+[ERROR][XorplusDebugger][2015-11-11 17:00:53,780]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 17:01:07,593]load config files success
+[ERROR][XorplusDebugger][2015-11-11 17:01:07,805]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 17:01:53,954]load config files success
+[ERROR][XorplusDebugger][2015-11-11 17:01:54,118]invalid connection
+[DEBUG][XorplusDebugger][2015-11-11 17:13:21,898]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 21:39:46,197]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 21:43:01,310]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 21:49:47,872]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 22:27:04,775]load config files success
+[DEBUG][XorplusDebugger][2015-11-11 23:01:33,543]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 00:45:44,992]load config files success
+[ERROR][XorplusDebugger][2015-11-12 00:46:15,975]invalid connection
+[DEBUG][XorplusDebugger][2015-11-12 00:57:02,737]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 00:57:47,957]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 00:59:06,304]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 01:03:53,854]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 01:08:05,587]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 01:11:59,145]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:03:58,888]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:15:52,920]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:18:34,906]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:23:09,754]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:27:02,999]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:28:00,745]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:42:27,164]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:44:30,560]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:45:32,259]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:47:12,758]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 11:59:51,531]load config files success
+[ERROR][XorplusDebugger][2015-11-12 11:59:51,691]invalid connection
+[DEBUG][XorplusDebugger][2015-11-12 12:00:14,134]load config files success
+[ERROR][XorplusDebugger][2015-11-12 12:00:14,295]invalid connection
+[DEBUG][XorplusDebugger][2015-11-12 12:03:30,561]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 12:14:47,770]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 12:51:40,311]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 12:51:52,901]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 12:53:31,697]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:03:52,216]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:05:06,274]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:07:06,513]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:10:47,287]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:22:08,617]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:24:27,399]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:47:31,016]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 13:57:59,884]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:04:38,943]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:05:55,783]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:07:27,780]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:08:32,490]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:09:37,309]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:13:21,085]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:15:12,386]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:24:41,881]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:30:06,617]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:33:26,977]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:36:32,334]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:41:14,649]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:49:42,381]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 14:57:01,357]load config files success
+[ERROR][XorplusDebugger][2015-11-12 14:57:01,552]invalid connection
+[DEBUG][XorplusDebugger][2015-11-12 15:01:26,989]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:19:23,502]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:23:41,336]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:25:58,030]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:34:12,622]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:40:46,156]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:42:38,270]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:47:27,842]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:49:27,338]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:51:21,577]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 15:53:37,733]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 16:01:40,178]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 16:06:30,213]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 16:10:40,961]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 16:12:31,327]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 17:43:55,538]load config files success
+[DEBUG][XorplusDebugger][2015-11-12 18:07:00,159]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 10:25:02,760]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 10:27:37,838]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 10:32:15,723]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 10:44:05,920]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 10:47:32,618]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 10:54:42,951]load config files success
+[ERROR][XorplusDebugger][2015-11-13 11:04:16,090]invalid connection
+[DEBUG][XorplusDebugger][2015-11-13 11:08:42,748]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 11:19:15,818]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 11:23:58,850]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 11:28:35,588]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 11:35:58,054]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 11:37:06,241]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 11:47:49,494]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 11:53:04,974]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:08:53,032]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:10:14,866]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:14:31,513]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:19:12,562]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:20:46,270]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:22:55,270]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:35:12,306]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:38:25,647]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 12:54:33,546]load config files success
+[ERROR][XorplusDebugger][2015-11-13 13:07:14,459]invalid connection
+[DEBUG][XorplusDebugger][2015-11-13 14:55:00,157]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 15:03:01,074]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 15:29:12,939]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 15:30:23,625]load config files success
+[ERROR][XorplusDebugger][2015-11-13 15:30:23,784]invalid connection
+[DEBUG][XorplusDebugger][2015-11-13 15:35:12,937]load config files success
+[ERROR][XorplusDebugger][2015-11-13 15:41:49,276]invalid connection
+[DEBUG][XorplusDebugger][2015-11-13 15:52:00,138]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 15:56:12,404]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 15:58:54,604]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 16:00:25,917]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 16:24:08,144]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 16:31:39,864]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 16:49:06,546]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 17:16:04,256]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 17:28:15,805]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 17:45:45,304]load config files success
+[DEBUG][XorplusDebugger][2015-11-13 20:59:14,971]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:22:54,542]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:27:05,069]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:28:53,029]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:33:47,221]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:38:21,882]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:39:48,894]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:42:59,163]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:44:57,709]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:56:44,626]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 15:58:17,705]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 16:00:22,072]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 16:03:35,635]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 16:05:06,935]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 16:09:28,503]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 16:13:37,537]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 16:16:48,586]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 16:33:12,980]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 17:06:44,989]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 17:08:27,748]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 17:09:37,539]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 17:28:10,289]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 17:29:29,271]load config files success
+[DEBUG][XorplusDebugger][2015-11-15 17:36:32,687]load config files success

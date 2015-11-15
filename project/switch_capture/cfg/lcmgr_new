@@ -1,0 +1,10 @@
+[breaks]
+#断点编号 = 断点位置（函数）
+1 = rx_packet_callback
+2 = XrlLcmgrTarget::lcmgr_0_1_send_packet_from_cpu
+
+[vars]
+#断点编号 =  变量名 处理函数 附加信息（多个变量用“|”分隔）
+#
+1 = rx_pkt pcls_lcmgrcb rx-l2
+2 = packet_data pxvec_lcmgrcb tx-l2
