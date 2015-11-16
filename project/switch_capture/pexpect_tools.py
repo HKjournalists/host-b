@@ -401,7 +401,7 @@ class Pexpc4Xorplus(object):
             sh.sendline('exit\n')
             sh.expect(['.*>', pexpect.EOF, pexpect.TIMEOUT], 5)
             sh.sendline('exit')
-            sh.expect([['.*[$#]', pexpect.EOF, pexpect.TIMEOUT], pexpect.EOF], 5)
+            sh.expect(['.*[$#]', pexpect.EOF, pexpect.TIMEOUT], 5)
             return 0
         if self.expsh is not None and self.expsh.isalive():
             try:
