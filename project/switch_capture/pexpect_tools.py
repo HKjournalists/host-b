@@ -57,8 +57,8 @@ class Pexpc4Xorplus(object):
             child: pexpect子进程（开启交换机shell会话）
             None: 进入shell过程中出错则返回None
         """
-        #if self.expsh is not None and self.expsh.isalive():
-        #    return 0
+        if self.expsh is not None and self.expsh.isalive():
+            return child
         child = pexpect.spawn('telnet %s' % (self.ip), timeout=self.timeout)
         index = child.expect(['login:', '.*>', pexpect.EOF, pexpect.TIMEOUT])
         if index > 1:
@@ -397,24 +397,24 @@ class Pexpc4Xorplus(object):
         """
         if sh is not None:
             sh.sendline('exit')
-            sh.expect('$', 30)
+            sh.expect(['$', pexpect.EOF, pexpect.TIMEOUT], 5)
             sh.sendline('exit\n')
-            sh.expect('.*>', 30)
+            sh.expect(['.*>', pexpect.EOF, pexpect.TIMEOUT], 5)
             sh.sendline('exit')
-            sh.expect(['.*[$#]', pexpect.EOF], 30)
+            sh.expect([['.*[$#]', pexpect.EOF, pexpect.TIMEOUT], pexpect.EOF], 5)
             return 0
         if self.expsh is not None and self.expsh.isalive():
             try:
                 self.expsh.sendline('exit')
-                index = self.expsh.expect(['$', pexpect.EOF, pexpect.TIMEOUT], 30)
+                index = self.expsh.expect(['$', pexpect.EOF, pexpect.TIMEOUT], 5)
                 if index != 0:
                     return -1 
                 self.expsh.sendline('exit\n')
-                index = self.expsh.expect(['.*>', pexpect.EOF, pexpect.TIMEOUT], 30)
+                index = self.expsh.expect(['.*>', pexpect.EOF, pexpect.TIMEOUT], 5)
                 if index != 0:
                     return -1 
                 self.expsh.sendline('exit')
-                index = self.expsh.expect(['.*[$#]', pexpect.EOF, pexpect.TIMEOUT], 30)
+                index = self.expsh.expect(['.*[$#]', pexpect.EOF, pexpect.TIMEOUT], 5)
                 if index != 1:
                     return -1 
                 return 0        

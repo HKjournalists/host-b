@@ -289,11 +289,12 @@ class ModuleDebugger(multiprocessing.Process):   # threading.Thread / multiproce
         self.vars = []
 
     def run(self):
-        #分离符号表
-        #复制文件到交换机（符号表，源代码文件，gdb脚本）
-        #进行gdb调试
-        #储存信息
-        #清理环境
+        """执行调试进程
+        Args:
+            None
+        Returns:
+            None
+        """
         self.logger.debug('thread start')
         ret = self.prepare()
         if ret == -1:

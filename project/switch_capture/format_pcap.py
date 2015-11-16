@@ -83,14 +83,30 @@ def get_pkt_list(orig_pkt_txt):
             #    continue
             pattern_hex_data = re.compile(r'(0x\w+:\s+)(.*)')
             if pattern_hex_data.search(tmp_line) == None:
-                pattern_date_proto = re.compile(r'^\[INFO\].*\[(\d+-\d+-\d+\s+\d+:\d+:\d+,\d+)\].*, (\w+), (\w+), (\w+)')
+                pattern_date_proto = re.compile(r'^\[INFO\].*\[(\d+-\d+-\d+\s+\d+:\d+:\d+,\d+)\].*, (\w+)-(\w+)')
                 if pattern_date_proto.search(tmp_line) == None:
+                    """
                     pattern_src_dst_ip = re.compile(r'src.*:(\d+.\d+.\d+.\d+) dst.*:(\d+.\d+.\d+.\d+)')
                     if pattern_src_dst_ip.search(tmp_line) == None:
                         continue
                     else:
                         res_src_dst_ip = pattern_src_dst_ip.search(tmp_line).groups()
                         tmp_list.append(':' + res_src_dst_ip[0] + ':' + res_src_dst_ip[1])
+                        flag_of_ipaddr = 1
+                    """
+                    pattern_src_ip = re.compile(r'src.*: (\d+.\d+.\d+.\d+)')
+                    pattern_dst_ip = re.compile(r'dst.*: (\d+.\d+.\d+.\d+)')
+                    if pattern_src_ip.search(tmp_line) == None:
+                        if pattern_dst_ip.search(tmp_line) == None:
+                            continue
+                        else:
+                            res_dst_ip = pattern_dst_ip.search(tmp_line).groups()
+                            tmp_list.append(':' + res_dst_ip[0])
+                            flag_of_ipaddr = 1
+                        continue
+                    else:
+                        res_src_ip = pattern_src_ip.search(tmp_line).groups()
+                        tmp_list.append(':' + res_src_ip[0])
                         flag_of_ipaddr = 1
                     continue
                 if len(tmp_list) != 0:
@@ -104,9 +120,10 @@ def get_pkt_list(orig_pkt_txt):
                 date = res_date_proto[0]
                 direction = res_date_proto[1]
                 proto = res_date_proto[2]
-                otherparam = res_date_proto[3]
+                #otherparam = res_date_proto[3]
                 mirco_secds = get_mircosec(date)
-                tmp_list.append(str(mirco_secds) + ':' + direction + ':' + proto + ':' + otherparam + ':')
+                #tmp_list.append(str(mirco_secds) + ':' + direction + ':' + proto + ':' + otherparam + ':')
+                tmp_list.append(str(mirco_secds) + ':' + direction + ':' + proto + ':')
                 continue
             else:
                 res = pattern_hex_data.search(tmp_line).groups()
@@ -136,6 +153,7 @@ def writeByteStringToFile(bytestring, filename):
     bitout = open(filename, 'wb')
     bitout.write(bytes)
 
+"""
 # format packet data
 def format_packet_data(packet_otherparam, packet_data):
     if packet_otherparam == "lcmgrbuf":
@@ -145,7 +163,7 @@ def format_packet_data(packet_otherparam, packet_data):
     if packet_otherparam == "lcmgrcb":
         pass
     return packet_data
-
+"""
 
 # set each packet header use for pcap format
 def set_pcap_pkt_hdr(packet_time, packet_type, packet_data):
@@ -241,18 +259,24 @@ def generatePCAP(txt_file, pcap_file):
     pkt_list = get_pkt_list(txt_file)
     bytestring = pcap_global_header
     for packet in pkt_list:
-        pattern = re.compile(r'(\d+):(\w+):(\w+):(\w+):(.*) :(\d+.\d+.\d+.\d+):(\d+.\d+.\d+.\d+)')
+        print packet
+        pattern = re.compile(r'(\d+):(\w+):(\w+):(.*) :(\d+.\d+.\d+.\d+):(\d+.\d+.\d+.\d+)')
         if pattern.search(packet) == None:
             continue
         res = pattern.search(packet).groups()
         packet_time = res[0]
         packet_direction = res[1]
         packet_type = res[2]
+        """
         packet_otherparam = res[3]
         packet_data = res[4]
         packet_src_ip = res[5]
         packet_dst_ip = res[6]
         packet_data = format_packet_data(packet_otherparam, packet_data)
+        """
+        packet_data = res[3]
+        packet_src_ip = res[4]
+        packet_dst_ip = res[5]
 
         pcaph = set_pcap_pkt_hdr(packet_time, packet_type, packet_data)
         packet_content = set_pcap_pkt_content(packet_type, packet_data, packet_src_ip, packet_dst_ip)
